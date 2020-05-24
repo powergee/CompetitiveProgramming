@@ -1,0 +1,11 @@
+c:\Users\김정현\OneDrive - 서울시립대학교\알림\백준 코드\1학년 겨울방학\C# 과외\윤년\bin\Debug\netcoreapp3.1\윤년.exe
+c:\Users\김정현\OneDrive - 서울시립대학교\알림\백준 코드\1학년 겨울방학\C# 과외\윤년\bin\Debug\netcoreapp3.1\윤년.deps.json
+c:\Users\김정현\OneDrive - 서울시립대학교\알림\백준 코드\1학년 겨울방학\C# 과외\윤년\bin\Debug\netcoreapp3.1\윤년.runtimeconfig.json
+c:\Users\김정현\OneDrive - 서울시립대학교\알림\백준 코드\1학년 겨울방학\C# 과외\윤년\bin\Debug\netcoreapp3.1\윤년.runtimeconfig.dev.json
+c:\Users\김정현\OneDrive - 서울시립대학교\알림\백준 코드\1학년 겨울방학\C# 과외\윤년\bin\Debug\netcoreapp3.1\윤년.dll
+c:\Users\김정현\OneDrive - 서울시립대학교\알림\백준 코드\1학년 겨울방학\C# 과외\윤년\bin\Debug\netcoreapp3.1\윤년.pdb
+c:\Users\김정현\OneDrive - 서울시립대학교\알림\백준 코드\1학년 겨울방학\C# 과외\윤년\obj\Debug\netcoreapp3.1\윤년.csprojAssemblyReference.cache
+c:\Users\김정현\OneDrive - 서울시립대학교\알림\백준 코드\1학년 겨울방학\C# 과외\윤년\obj\Debug\netcoreapp3.1\윤년.AssemblyInfoInputs.cache
+c:\Users\김정현\OneDrive - 서울시립대학교\알림\백준 코드\1학년 겨울방학\C# 과외\윤년\obj\Debug\netcoreapp3.1\윤년.AssemblyInfo.cs
+c:\Users\김정현\OneDrive - 서울시립대학교\알림\백준 코드\1학년 겨울방학\C# 과외\윤년\obj\Debug\netcoreapp3.1\윤년.dll
+c:\Users\김정현\OneDrive - 서울시립대학교\알림\백준 코드\1학년 겨울방학\C# 과외\윤년\obj\Debug\netcoreapp3.1\윤년.pdb

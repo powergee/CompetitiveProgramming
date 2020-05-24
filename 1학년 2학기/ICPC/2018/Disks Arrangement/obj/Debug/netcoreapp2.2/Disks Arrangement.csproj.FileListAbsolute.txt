@@ -1,0 +1,11 @@
+c:\Users\Hyeoun\OneDrive - 서울시립대학교\알림\백준 코드\1학년 2학기\기타\Disks Arrangement\bin\Debug\netcoreapp2.2\Disks Arrangement.deps.json
+c:\Users\Hyeoun\OneDrive - 서울시립대학교\알림\백준 코드\1학년 2학기\기타\Disks Arrangement\bin\Debug\netcoreapp2.2\Disks Arrangement.runtimeconfig.json
+c:\Users\Hyeoun\OneDrive - 서울시립대학교\알림\백준 코드\1학년 2학기\기타\Disks Arrangement\bin\Debug\netcoreapp2.2\Disks Arrangement.runtimeconfig.dev.json
+c:\Users\Hyeoun\OneDrive - 서울시립대학교\알림\백준 코드\1학년 2학기\기타\Disks Arrangement\bin\Debug\netcoreapp2.2\Disks Arrangement.dll
+c:\Users\Hyeoun\OneDrive - 서울시립대학교\알림\백준 코드\1학년 2학기\기타\Disks Arrangement\bin\Debug\netcoreapp2.2\Disks Arrangement.pdb
+c:\Users\Hyeoun\OneDrive - 서울시립대학교\알림\백준 코드\1학년 2학기\기타\Disks Arrangement\obj\Debug\netcoreapp2.2\Disks Arrangement.csprojAssemblyReference.cache
+c:\Users\Hyeoun\OneDrive - 서울시립대학교\알림\백준 코드\1학년 2학기\기타\Disks Arrangement\obj\Debug\netcoreapp2.2\Disks Arrangement.csproj.CoreCompileInputs.cache
+c:\Users\Hyeoun\OneDrive - 서울시립대학교\알림\백준 코드\1학년 2학기\기타\Disks Arrangement\obj\Debug\netcoreapp2.2\Disks Arrangement.AssemblyInfoInputs.cache
+c:\Users\Hyeoun\OneDrive - 서울시립대학교\알림\백준 코드\1학년 2학기\기타\Disks Arrangement\obj\Debug\netcoreapp2.2\Disks Arrangement.AssemblyInfo.cs
+c:\Users\Hyeoun\OneDrive - 서울시립대학교\알림\백준 코드\1학년 2학기\기타\Disks Arrangement\obj\Debug\netcoreapp2.2\Disks Arrangement.dll
+c:\Users\Hyeoun\OneDrive - 서울시립대학교\알림\백준 코드\1학년 2학기\기타\Disks Arrangement\obj\Debug\netcoreapp2.2\Disks Arrangement.pdb

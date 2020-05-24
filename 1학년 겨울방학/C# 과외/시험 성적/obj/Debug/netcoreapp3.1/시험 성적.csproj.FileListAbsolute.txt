@@ -1,0 +1,11 @@
+c:\Users\김정현\OneDrive - 서울시립대학교\알림\백준 코드\1학년 겨울방학\C# 과외\시험 성적\bin\Debug\netcoreapp3.1\시험 성적.exe
+c:\Users\김정현\OneDrive - 서울시립대학교\알림\백준 코드\1학년 겨울방학\C# 과외\시험 성적\bin\Debug\netcoreapp3.1\시험 성적.deps.json
+c:\Users\김정현\OneDrive - 서울시립대학교\알림\백준 코드\1학년 겨울방학\C# 과외\시험 성적\bin\Debug\netcoreapp3.1\시험 성적.runtimeconfig.json
+c:\Users\김정현\OneDrive - 서울시립대학교\알림\백준 코드\1학년 겨울방학\C# 과외\시험 성적\bin\Debug\netcoreapp3.1\시험 성적.runtimeconfig.dev.json
+c:\Users\김정현\OneDrive - 서울시립대학교\알림\백준 코드\1학년 겨울방학\C# 과외\시험 성적\bin\Debug\netcoreapp3.1\시험 성적.dll
+c:\Users\김정현\OneDrive - 서울시립대학교\알림\백준 코드\1학년 겨울방학\C# 과외\시험 성적\bin\Debug\netcoreapp3.1\시험 성적.pdb
+c:\Users\김정현\OneDrive - 서울시립대학교\알림\백준 코드\1학년 겨울방학\C# 과외\시험 성적\obj\Debug\netcoreapp3.1\시험 성적.csprojAssemblyReference.cache
+c:\Users\김정현\OneDrive - 서울시립대학교\알림\백준 코드\1학년 겨울방학\C# 과외\시험 성적\obj\Debug\netcoreapp3.1\시험 성적.AssemblyInfoInputs.cache
+c:\Users\김정현\OneDrive - 서울시립대학교\알림\백준 코드\1학년 겨울방학\C# 과외\시험 성적\obj\Debug\netcoreapp3.1\시험 성적.AssemblyInfo.cs
+c:\Users\김정현\OneDrive - 서울시립대학교\알림\백준 코드\1학년 겨울방학\C# 과외\시험 성적\obj\Debug\netcoreapp3.1\시험 성적.dll
+c:\Users\김정현\OneDrive - 서울시립대학교\알림\백준 코드\1학년 겨울방학\C# 과외\시험 성적\obj\Debug\netcoreapp3.1\시험 성적.pdb

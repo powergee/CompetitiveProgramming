@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.1",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "심부름 가는 길/1.0.0": {
+        "runtime": {
+          "심부름 가는 길.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "심부름 가는 길/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

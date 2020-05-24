@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v3.1",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "머지 소트 트리/1.0.0": {
+        "runtime": {
+          "머지 소트 트리.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "머지 소트 트리/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

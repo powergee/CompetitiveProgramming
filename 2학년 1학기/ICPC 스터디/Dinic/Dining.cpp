@@ -15,6 +15,7 @@ std::vector<int> graph[VERTEX_COUNT];
 void AddEdge(int start, int end, int cap)
 {
     graph[start].push_back(end);
+    graph[end].push_back(start);
     capacity[start][end] += cap;
 }
 
@@ -77,7 +78,7 @@ int Dinic(int source, int sink)
         while (true)
         {
             int ableToFlow = AddFlow(source, sink, 1e9);
-            if (ableToFlow == 0)
+            if (ableToFlow <= 0)
                 break;
             total += ableToFlow;
         }
@@ -92,7 +93,7 @@ int main()
     scanf("%d %d %d", &n, &f, &d);
 
     for (int i = 1; i <= f; ++i)
-        AddEdge(0, f, 1);
+        AddEdge(0, i, 1);
     for (int i = 1; i <= d; ++i)
         AddEdge(i + 300, 401, 1);
     for (int i = 1; i <= n; ++i)

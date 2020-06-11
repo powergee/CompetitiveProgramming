@@ -44,9 +44,6 @@ def getScore(frame):
         return 0
 
     elif frame == 10:
-        if pin[19] == -1 and pin[20] == -1:
-            return -1
-
         sum = 0
         for i in range(18, 21):
             if pin[i] != -1:
@@ -57,9 +54,6 @@ def getScore(frame):
     else:
         pin1st = pin[frame * 2 - 2]
         pin2nd = pin[frame * 2 - 1]
-
-        if pin1st == -1 or (pin1st != 10 and pin2nd == -1):
-            return -1
         
         if pin2nd == -1:
             pin2nd = 0
@@ -69,14 +63,10 @@ def getScore(frame):
 
         elif pin1st == 10:
             bonus = getNextRolls(frame * 2, 2)
-            if bonus == -1:
-                return -1
             return 10 + bonus + getScore(frame - 1)
         
         else:
             bonus = getNextRolls(frame * 2, 1)
-            if bonus == -1:
-                return -1
             return 10 + bonus + getScore(frame - 1)
 
 scoreStr = input()
@@ -91,9 +81,5 @@ while roll < 18:
 while strIndex < len(scoreStr):
     roll = setScore(roll, scoreStr[strIndex], True)
     strIndex += 1
-
-#print(pin)
-#for i in range(1, 11):
-#    print(getScore(i))
 
 print(getScore(10))

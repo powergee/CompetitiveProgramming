@@ -1,12 +1,14 @@
 #include <iostream>
-#include <cmath>
 #include <algorithm>
+#include <cmath>
 #include <climits>
 
 typedef long long Long;
 
-int n, h, alpha, beta;
+Long n, h, alpha, beta;
 std::pair<Long, Long> ground[10000];
+double leftMaxDist[10000];
+double rightMaxDist[10000];
 Long dp[10000];
 
 Long calcCost(int start)
@@ -19,27 +21,16 @@ Long calcCost(int start)
         return result;
     result = LLONG_MAX;
 
-    double minD = 0, maxD = 2 * (h - ground[start].second);
     for (int i = start + 1; i < n; ++i)
     {
-        Long currD = ground[i].first - ground[start].first;
-        Long currH = h - ground[start].second;
-        printf("%lld %lld %lld\n", ground[i].first, ground[start].first, ground[start].second);
-        
-        if (2*currH <= currD)
-            minD = std::max(minD, 2*currD + 2*currH - sqrt(8*currD*currH));
-        maxD = std::min(maxD, 2*currD + 2*currH + sqrt(8*currD*currH));
+        Long dist = ground[i].first - ground[start].first;
 
-        printf("%lf %lf\n", minD, maxD);
-        printf("-> %lld %lld\n", currD, currH);
-        
-        if (minD > maxD || currD > maxD)
-            break;
-        if (minD <= currD && currD <= maxD)
+        if (rightMaxDist[start] * 2 >= dist && leftMaxDist[i] * 2 >= dist)
         {
+            Long costOfSegment = alpha*(h-ground[start].second) + beta*dist*dist;
             Long next = calcCost(i);
-            if (next != -1)
-                result = std::min(result, alpha * currH + beta * currD * currD + next);
+            if (next != -1 && costOfSegment + next < result)
+                result = costOfSegment + next;
         }
     }
 
@@ -50,14 +41,39 @@ Long calcCost(int start)
 
 int main()
 {
-    scanf("%d %d %d %d", &n, &h, &alpha, &beta);
+    scanf("%lld %lld %lld %lld", &n, &h, &alpha, &beta);
 
     for (int i = 0; i < n; ++i)
-    {
         scanf("%lld %lld", &ground[i].first, &ground[i].second);
-    }
     
+    for (int i = 0; i < n - 1; ++i)
+    {
+        rightMaxDist[i] = h - ground[i].second;
+
+        for (int j = i + 1; j < n; ++j)
+        {
+            Long dx = ground[j].first - ground[i].first;
+            Long dy = h - ground[j].second;
+            double currDist = dx + dy + sqrt(2*dx*dy);
+            rightMaxDist[i] = std::min(rightMaxDist[i], currDist);
+        }
+    }
+
+    for (int i = 1; i < n; ++i)
+    {
+        leftMaxDist[i] = h - ground[i].second;
+
+        for (int j = 0; j < i; ++j)
+        {
+            Long dx = ground[i].first - ground[j].first;
+            Long dy = h - ground[j].second;
+            double currDist = dx + dy + sqrt(2*dx*dy);
+            leftMaxDist[i] = std::min(leftMaxDist[i], currDist);
+        }
+    }
+
     Long minCost = calcCost(0);
+
     if (minCost == -1)
         printf("impossible");
     else printf("%lld", minCost);

@@ -6,7 +6,7 @@
 
 int n, m;
 std::vector<int> graph[500001];
-std::set<std::pair<int, int>> answer;
+std::vector<std::pair<int, int>> answer;
 
 bool hasCycle(std::vector<int>& component)
 {
@@ -78,13 +78,13 @@ void putDeadEndSigns(std::vector<int>& component)
 
         for (int u : component)
             for (int v : signs[u])
-                answer.insert({ u, v });
+                answer.push_back({ u, v });
     }
     else
     {
         for (int v : component)
             if ((int)graph[v].size() == 1)
-                answer.insert({ v, graph[v][0] });
+                answer.push_back({ v, graph[v][0] });
     }
 }
 
@@ -128,6 +128,7 @@ int main()
         putDeadEndSigns(component);
     }
 
+    std::sort(answer.begin(), answer.end());
     printf("%d\n", (int)answer.size());
     for (auto p : answer)
         printf("%d %d\n", p.first, p.second);

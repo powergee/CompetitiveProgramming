@@ -2,16 +2,17 @@
 #include <vector>
 #include <queue>
 #include <algorithm>
+#include <set>
 
 int n, m;
 std::vector<int> graph[500001];
-std::vector<std::pair<int, int>> answer;
+std::set<std::pair<int, int>> answer;
 
 bool hasCycle(std::vector<int>& component)
 {
     static bool visited[500001];
     std::queue<std::pair<int, int>> q;
-    q.push({component[0], 0});
+    q.push({ component[0], 0 });
 
     while (!q.empty())
     {
@@ -27,8 +28,8 @@ bool hasCycle(std::vector<int>& component)
                 continue;
             if (visited[next])
                 return true;
-            
-            q.push({next, now.first});
+
+            q.push({ next, now.first });
         }
     }
 
@@ -42,30 +43,34 @@ void putDeadEndSigns(std::vector<int>& component)
         std::queue<std::pair<int, int>> leafQ;
         for (int v : component)
             if ((int)graph[v].size() == 1)
-                leafQ.push({v, 0});
-        
+                leafQ.push({ v, 0 });
+
         static bool passed[500001];
         static std::vector<int> signs[500001];
+        static int passedCount[500001];
         while (!leafQ.empty())
         {
             std::pair<int, int> now = leafQ.front();
             leafQ.pop();
-            
-            int passedCount = 0, notPassed;
-            for (int connected : graph[now.first])
-            {
-                if (passed[connected])
-                    ++passedCount;
-                else notPassed = connected;
-            }
-            
-            if ((int)graph[now.first].size() - passedCount == 1)
+
+            passed[now.second] = true;
+            for (int v : graph[now.second])
+                ++passedCount[v];
+
+            if ((int)graph[now.first].size() - passedCount[now.first] == 1)
             {
                 signs[now.first].resize(0);
-                leafQ.push({notPassed, now.first});
-                passed[now.first] = true;
+
+                for (int v : graph[now.first])
+                {
+                    if (!passed[v])
+                    {
+                        leafQ.push({ v, now.first });
+                        break;
+                    }
+                }
             }
-            else if ((int)graph[now.first].size() - passedCount > 1)
+            else if ((int)graph[now.first].size() - passedCount[now.first] > 1)
             {
                 signs[now.first].push_back(now.second);
             }
@@ -73,28 +78,24 @@ void putDeadEndSigns(std::vector<int>& component)
 
         for (int u : component)
             for (int v : signs[u])
-                answer.push_back({u, v});
+                answer.insert({ u, v });
     }
     else
     {
         for (int v : component)
             if ((int)graph[v].size() == 1)
-                answer.push_back({v, graph[v][0]});
+                answer.insert({ v, graph[v][0] });
     }
 }
 
 int main()
 {
-    std::ios_base::sync_with_stdio(false);
-    std::cin.tie(nullptr);
-    std::cout.tie(nullptr);
-
-    std::cin >> n >> m;
+    scanf("%d %d", &n, &m);
 
     for (int i = 0; i < m; ++i)
     {
         int u, v;
-        std::cin >> u >> v;
+        scanf("%d %d", &u, &v);
         graph[u].push_back(v);
         graph[v].push_back(u);
     }
@@ -115,7 +116,7 @@ int main()
             q.pop();
             if (visited[now])
                 continue;
-            
+
             visited[now] = true;
             component.push_back(now);
 
@@ -127,10 +128,9 @@ int main()
         putDeadEndSigns(component);
     }
 
-    std::sort(answer.begin(), answer.end());
-    std::cout << answer.size() << "\n";
+    printf("%d\n", (int)answer.size());
     for (auto p : answer)
-        std::cout << p.first << " " << p.second << "\n";
+        printf("%d %d\n", p.first, p.second);
 
     return 0;
 }

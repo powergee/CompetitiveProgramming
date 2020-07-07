@@ -81,7 +81,7 @@ void getDiffOfAdjRing(int adjToRing)
             int actualEndPoint = (indexInRing[ring] + k-now.second+1) % count;
             --diffOfRing[(*nodes)[actualEndPoint]];
 
-            if (ring == 0 || (actualEndPoint != 0 && actualEndPoint < ring))
+            if (indexInRing[ring] == 0 || (actualEndPoint != 0 && actualEndPoint < indexInRing[ring]))
                 ++answer[(*nodes)[0]];
         }
         else break;
@@ -93,7 +93,7 @@ void getDiffOfAdjRing(int adjToRing)
 
 void applyDiffOfRing(int ring)
 {
-    bool applied[500001];
+    static bool applied[500001];
 
     if (applied[ring])
         return;
@@ -102,9 +102,10 @@ void applyDiffOfRing(int ring)
     for (int node : *nodes)
         applied[node] = true;
     
-    int prev = (*nodes)[0];
-    for (int current = graph[ring]; current != ring; current = graph[current])
+    for (int i = 1; i < (int)nodes->size(); ++i)
     {
+        int current = (*nodes)[i];
+        int prev = (*nodes)[i-1];
         answer[current] = answer[prev] + diffOfRing[current];
         prev = current;
     }

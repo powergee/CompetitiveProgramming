@@ -1,0 +1,13 @@
+/home/hyeon/CompetitiveProgramming/2학년 여름방학/ICPC 스터디/WF 2019/Karel the Robot/bin/Debug/netcoreapp3.1/Karel the Robot
+/home/hyeon/CompetitiveProgramming/2학년 여름방학/ICPC 스터디/WF 2019/Karel the Robot/bin/Debug/netcoreapp3.1/Karel the Robot.deps.json
+/home/hyeon/CompetitiveProgramming/2학년 여름방학/ICPC 스터디/WF 2019/Karel the Robot/bin/Debug/netcoreapp3.1/Karel the Robot.runtimeconfig.json
+/home/hyeon/CompetitiveProgramming/2학년 여름방학/ICPC 스터디/WF 2019/Karel the Robot/bin/Debug/netcoreapp3.1/Karel the Robot.runtimeconfig.dev.json
+/home/hyeon/CompetitiveProgramming/2학년 여름방학/ICPC 스터디/WF 2019/Karel the Robot/bin/Debug/netcoreapp3.1/Karel the Robot.dll
+/home/hyeon/CompetitiveProgramming/2학년 여름방학/ICPC 스터디/WF 2019/Karel the Robot/bin/Debug/netcoreapp3.1/Karel the Robot.pdb
+/home/hyeon/CompetitiveProgramming/2학년 여름방학/ICPC 스터디/WF 2019/Karel the Robot/obj/Debug/netcoreapp3.1/Karel the Robot.csprojAssemblyReference.cache
+/home/hyeon/CompetitiveProgramming/2학년 여름방학/ICPC 스터디/WF 2019/Karel the Robot/obj/Debug/netcoreapp3.1/Karel the Robot.AssemblyInfoInputs.cache
+/home/hyeon/CompetitiveProgramming/2학년 여름방학/ICPC 스터디/WF 2019/Karel the Robot/obj/Debug/netcoreapp3.1/Karel the Robot.AssemblyInfo.cs
+/home/hyeon/CompetitiveProgramming/2학년 여름방학/ICPC 스터디/WF 2019/Karel the Robot/obj/Debug/netcoreapp3.1/Karel the Robot.csproj.CoreCompileInputs.cache
+/home/hyeon/CompetitiveProgramming/2학년 여름방학/ICPC 스터디/WF 2019/Karel the Robot/obj/Debug/netcoreapp3.1/Karel the Robot.dll
+/home/hyeon/CompetitiveProgramming/2학년 여름방학/ICPC 스터디/WF 2019/Karel the Robot/obj/Debug/netcoreapp3.1/Karel the Robot.pdb
+/home/hyeon/CompetitiveProgramming/2학년 여름방학/ICPC 스터디/WF 2019/Karel the Robot/obj/Debug/netcoreapp3.1/Karel the Robot.genruntimeconfig.cache

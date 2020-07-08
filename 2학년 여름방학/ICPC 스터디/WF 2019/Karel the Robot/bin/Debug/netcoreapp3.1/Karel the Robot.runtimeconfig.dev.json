@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "/home/hyeon/.dotnet/store/|arch|/|tfm|",
+      "/home/hyeon/.nuget/packages"
+    ]
+  }
+}

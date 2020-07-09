@@ -270,50 +270,41 @@ namespace Karel_the_Robot
                 }
             }
         }
- 
+
         public void Execute(Map map)
         {
-            if (exeDP.ContainsKey(map.State))
-                map.State = exeDP[map.State];
+            if (childProc != '\0')
+                Procedure.FindProcByID(childProc).Execute(map);
             else
             {
-                RobotState prev = map.State;
-                
-                if (childProc != '\0')
-                    Procedure.FindProcByID(childProc).Execute(map);
-                else
+                switch (comChar)
                 {
-                    switch (comChar)
-                    {
-                    case 'm':
-                        map.MoveRobot();
-                        break;
-    
-                    case 'l':
-                        map.TurnLeft();
-                        break;
-                    
-                    case 'i':
-                        if (condition.IsSatisfied(map))
-                            childProgs[0].Execute(map);
-                        else childProgs[1].Execute(map);
-                        break;
-    
-                    case 'u':
-                        SortedSet<RobotState> statesHistory = new SortedSet<RobotState>();
-                        while (!condition.IsSatisfied(map))
-                        {
-                            RobotState state = map.State;
-                            if (statesHistory.Contains(state))
-                                throw new NeverTerminatingException();
-                            statesHistory.Add(state);
-                            childProgs[0].Execute(map);
-                        }
-                        break;
-                    }
-                }
+                case 'm':
+                    map.MoveRobot();
+                    break;
 
-                exeDP[prev] = map.State;
+                case 'l':
+                    map.TurnLeft();
+                    break;
+
+                case 'i':
+                    if (condition.IsSatisfied(map))
+                        childProgs[0].Execute(map);
+                    else childProgs[1].Execute(map);
+                    break;
+                    
+                case 'u':
+                    SortedSet<RobotState> statesHistory = new SortedSet<RobotState>();
+                    while (!condition.IsSatisfied(map))
+                    {
+                        RobotState state = map.State;
+                        if (statesHistory.Contains(state))
+                            throw new NeverTerminatingException();
+                        statesHistory.Add(state);
+                        childProgs[0].Execute(map);
+                    }
+                    break;
+                }
             }
         }
  

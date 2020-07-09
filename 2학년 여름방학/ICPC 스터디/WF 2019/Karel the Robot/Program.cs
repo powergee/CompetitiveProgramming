@@ -29,7 +29,6 @@ namespace Karel_the_Robot
             {
                 string[] init = reader.ReadLine().Split(' ');
                 map.Initialize(int.Parse(init[0]) - 1, int.Parse(init[1]) - 1, init[2][0]);
-                Program.ClearAllHistory();
  
                 string code = reader.ReadLine();
                 int start = 0;
@@ -63,7 +62,7 @@ namespace Karel_the_Robot
         }
     }
  
-    struct RobotState
+    struct RobotState : IComparable<RobotState>, IComparable
     {
         public int Row { get; set; }
         public int Col { get; set; }
@@ -88,6 +87,26 @@ namespace Karel_the_Robot
         {
             return $"{Row + 1} {Col + 1} {(char)((short)Facing)}";
         }
+
+        public int CompareTo(object obj)
+        {
+            if (obj is RobotState)
+                return CompareTo((RobotState) obj);
+            throw new ArgumentException();
+        }
+
+        public int CompareTo(RobotState state)
+        {
+            int h1 = GetHashCode();
+            int h2 = state.GetHashCode();
+
+            if (h1 == h2)
+                return 0;
+            else if (h1 < h2)
+                return 1;
+            else
+                return -1;
+        } 
     }
  
     class Map
@@ -99,7 +118,11 @@ namespace Karel_the_Robot
         public int Width { get; }
         public int Height { get; }
         
-        public RobotState State => state;
+        public RobotState State
+        {
+            get => state;
+            set => state = value;
+        }
  
         private Pair MovedPosition
         {
@@ -186,20 +209,11 @@ namespace Karel_the_Robot
     class Program
     {
         private List<Command> commands;
-        private HashSet<int>[] stateHistory;
- 
         public Program(string code, ref int start, bool isInProc)
         {
             commands = new List<Command>();
             while (start < code.Length && Command.IsCommand(code[start]))
                 commands.Add(new Command(code, ref start, isInProc));
- 
-            stateHistory = new HashSet<int>[commands.Count];
-            for (int i = 0; i < commands.Count; ++i)
-                stateHistory[i] = new HashSet<int>();
-            
-            if (isInProc)
-                progsInProc.Add(this);
         }
  
         public void Execute(Map map)
@@ -207,24 +221,7 @@ namespace Karel_the_Robot
             int pc = 0;
             
             while (pc < commands.Count)
-            {
-                int stateHash = map.State.GetHashCode();
-                if (stateHistory[pc].Contains(stateHash))
-                    throw new NeverTerminatingException();
-                
-                stateHistory[pc].Add(stateHash);
-                commands[pc].Execute(map);
-                ++pc;
-            }
-        }
- 
-        private static List<Program> progsInProc = new List<Program>();
- 
-        public static void ClearAllHistory()
-        {
-            foreach (Program p in progsInProc)
-                foreach (HashSet<int> hs in p.stateHistory)
-                    hs.Clear();
+                commands[pc++].Execute(map);
         }
     }
  
@@ -236,17 +233,13 @@ namespace Karel_the_Robot
         private Condition condition;
         private Program[] childProgs;
         private char childProc = '\0';
+        private SortedDictionary<RobotState, RobotState> exeDP = new SortedDictionary<RobotState, RobotState>();
  
         public Command(string code, ref int start, bool isInProc)
         {
-            if (!IsCommand(code[start]))
-                throw new InvalidOperationException();
-            
             comChar = code[start++];
             if ('A' <= comChar && comChar <= 'Z')
-            {
                 childProc = comChar;
-            }
             else
             {
                 switch (comChar)
@@ -280,31 +273,47 @@ namespace Karel_the_Robot
  
         public void Execute(Map map)
         {
-            if (childProc != '\0')
-                Procedure.FindProcByID(childProc).Execute(map);
+            if (exeDP.ContainsKey(map.State))
+                map.State = exeDP[map.State];
             else
             {
-                switch (comChar)
-                {
-                case 'm':
-                    map.MoveRobot();
-                    break;
- 
-                case 'l':
-                    map.TurnLeft();
-                    break;
+                RobotState prev = map.State;
                 
-                case 'i':
-                    if (condition.IsSatisfied(map))
-                        childProgs[0].Execute(map);
-                    else childProgs[1].Execute(map);
-                    break;
- 
-                case 'u':
-                    while (!condition.IsSatisfied(map))
-                        childProgs[0].Execute(map);
-                    break;
+                if (childProc != '\0')
+                    Procedure.FindProcByID(childProc).Execute(map);
+                else
+                {
+                    switch (comChar)
+                    {
+                    case 'm':
+                        map.MoveRobot();
+                        break;
+    
+                    case 'l':
+                        map.TurnLeft();
+                        break;
+                    
+                    case 'i':
+                        if (condition.IsSatisfied(map))
+                            childProgs[0].Execute(map);
+                        else childProgs[1].Execute(map);
+                        break;
+    
+                    case 'u':
+                        SortedSet<RobotState> statesHistory = new SortedSet<RobotState>();
+                        while (!condition.IsSatisfied(map))
+                        {
+                            RobotState state = map.State;
+                            if (statesHistory.Contains(state))
+                                throw new NeverTerminatingException();
+                            statesHistory.Add(state);
+                            childProgs[0].Execute(map);
+                        }
+                        break;
+                    }
                 }
+
+                exeDP[prev] = map.State;
             }
         }
  
@@ -347,7 +356,9 @@ namespace Karel_the_Robot
     {
         private char id;
         private Program body;
- 
+        private SortedDictionary<RobotState, RobotState> exeDP = new SortedDictionary<RobotState, RobotState>();
+        private SortedSet<RobotState> statesHistory = new SortedSet<RobotState>();
+
         public Procedure(string defCode)
         {
             id = defCode[0];
@@ -359,7 +370,17 @@ namespace Karel_the_Robot
  
         public void Execute(Map map)
         {
-            body.Execute(map);
+            if (exeDP.ContainsKey(map.State))
+                map.State = exeDP[map.State];
+            else
+            {
+                RobotState state = map.State;
+                if (statesHistory.Contains(state))
+                    throw new NeverTerminatingException();
+                statesHistory.Add(state);
+                body.Execute(map);
+                exeDP[state] = map.State;
+            }
         }
  
         private static Dictionary<char, Procedure> procDict = new Dictionary<char, Procedure>();

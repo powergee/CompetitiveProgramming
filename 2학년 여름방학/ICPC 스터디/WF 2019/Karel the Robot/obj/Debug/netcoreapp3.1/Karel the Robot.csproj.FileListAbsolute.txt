@@ -11,3 +11,16 @@
 /home/hyeon/CompetitiveProgramming/2학년 여름방학/ICPC 스터디/WF 2019/Karel the Robot/obj/Debug/netcoreapp3.1/Karel the Robot.dll
 /home/hyeon/CompetitiveProgramming/2학년 여름방학/ICPC 스터디/WF 2019/Karel the Robot/obj/Debug/netcoreapp3.1/Karel the Robot.pdb
 /home/hyeon/CompetitiveProgramming/2학년 여름방학/ICPC 스터디/WF 2019/Karel the Robot/obj/Debug/netcoreapp3.1/Karel the Robot.genruntimeconfig.cache
+G:\CompetitiveProgramming\2학년 여름방학\ICPC 스터디\WF 2019\Karel the Robot\bin\Debug\netcoreapp3.1\Karel the Robot.exe
+G:\CompetitiveProgramming\2학년 여름방학\ICPC 스터디\WF 2019\Karel the Robot\bin\Debug\netcoreapp3.1\Karel the Robot.deps.json
+G:\CompetitiveProgramming\2학년 여름방학\ICPC 스터디\WF 2019\Karel the Robot\bin\Debug\netcoreapp3.1\Karel the Robot.runtimeconfig.json
+G:\CompetitiveProgramming\2학년 여름방학\ICPC 스터디\WF 2019\Karel the Robot\bin\Debug\netcoreapp3.1\Karel the Robot.runtimeconfig.dev.json
+G:\CompetitiveProgramming\2학년 여름방학\ICPC 스터디\WF 2019\Karel the Robot\bin\Debug\netcoreapp3.1\Karel the Robot.dll
+G:\CompetitiveProgramming\2학년 여름방학\ICPC 스터디\WF 2019\Karel the Robot\bin\Debug\netcoreapp3.1\Karel the Robot.pdb
+G:\CompetitiveProgramming\2학년 여름방학\ICPC 스터디\WF 2019\Karel the Robot\obj\Debug\netcoreapp3.1\Karel the Robot.csprojAssemblyReference.cache
+G:\CompetitiveProgramming\2학년 여름방학\ICPC 스터디\WF 2019\Karel the Robot\obj\Debug\netcoreapp3.1\Karel the Robot.AssemblyInfoInputs.cache
+G:\CompetitiveProgramming\2학년 여름방학\ICPC 스터디\WF 2019\Karel the Robot\obj\Debug\netcoreapp3.1\Karel the Robot.AssemblyInfo.cs
+G:\CompetitiveProgramming\2학년 여름방학\ICPC 스터디\WF 2019\Karel the Robot\obj\Debug\netcoreapp3.1\Karel the Robot.csproj.CoreCompileInputs.cache
+G:\CompetitiveProgramming\2학년 여름방학\ICPC 스터디\WF 2019\Karel the Robot\obj\Debug\netcoreapp3.1\Karel the Robot.dll
+G:\CompetitiveProgramming\2학년 여름방학\ICPC 스터디\WF 2019\Karel the Robot\obj\Debug\netcoreapp3.1\Karel the Robot.pdb
+G:\CompetitiveProgramming\2학년 여름방학\ICPC 스터디\WF 2019\Karel the Robot\obj\Debug\netcoreapp3.1\Karel the Robot.genruntimeconfig.cache

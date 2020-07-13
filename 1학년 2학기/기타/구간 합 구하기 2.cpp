@@ -86,10 +86,10 @@ int main()
 	int N, M, K;
 	scanf("%d %d %d", &N, &M, &K);
 
-	for (int i = 1; i <= N; ++i)
+	for (int i = 0; i < N; ++i)
 		scanf("%lld", nums + i);
 
-	Init(1, 1, N);
+	Init(1, 0, N-1);
 
 	for (int i = 0; i < M + K; ++i)
 	{
@@ -102,11 +102,11 @@ int main()
 		case 1:
 			Long add;
 			scanf("%d %d %lld", &from, &to, &add);
-			LazyUpdate(add, from, to, 1, 1, N);
+			LazyUpdate(add, from-1, to-1, 1, 0, N-1);
 			break;
 		case 2:
 			scanf("%d %d", &from, &to);
-			printf("%lld\n", Query(1, 1, N, from, to));
+			printf("%lld\n", Query(1, 0, N-1, from-1, to-1));
 			break;
 		}
 	}

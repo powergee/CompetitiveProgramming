@@ -96,6 +96,15 @@ public:
         initialize(1, 0, count - 1, original);
     }
 
+    SegTree(int size)
+    {
+        count = size;
+        int treeHeight = (int)ceil(log2(count));
+        int vecSize = (1 << (treeHeight + 1));
+        tree.resize(vecSize);
+        lazy.resize(vecSize);
+    }
+
     T query(int start, int end)
     {
         return query(1, 0, count - 1, start, end);

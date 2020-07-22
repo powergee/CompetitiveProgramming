@@ -86,16 +86,16 @@ public:
         update(value, start, end, 1, 0, count - 1);
     }
 
-    void update(std::list<std::pair<int, int>>& trashes, int start, int end)
+    void update(std::list<std::pair<int, long long>>& trashes, int start, int end)
     {
         while (start <= end && !trashes.empty())
         {
             auto current = trashes.begin();
             
-            if (current->second <= end - start + 1)
+            if (current->second <= (long long)(end - start + 1))
             {
-                update(current->first, start, start + current->second - 1);
-                start += current->second;
+                update(current->first, start, start + (int)current->second - 1);
+                start += (int)current->second;
                 trashes.pop_front();
             }
             else
@@ -114,7 +114,7 @@ int main()
     scanf("%d %d %d %d", &n, &m, &k, &q);
 
     SegTree<int> tree(m);
-    std::list<std::pair<int, int>> trashes;
+    std::list<std::pair<int, long long>> trashes;
     int current;
     int length = 1;
     scanf("%d", &current);
@@ -132,6 +132,7 @@ int main()
         }
     }
     trashes.emplace_back(current, length);
+    tree.update(trashes, 0, m-1);
 
     while (q--)
     {
@@ -143,25 +144,26 @@ int main()
         case 1:
             int left, right;
             scanf("%d %d", &left, &right);
-            tree.update(0, left, right);
-            tree.update(trashes, left, right);
+            tree.update(0, left-1, right-1);
+            tree.update(trashes, left-1, right-1);
             break;
 
         case 2:
             int index;
             scanf("%d", &index);
-            printf("%d ", tree.query(index));
+            printf("%d ", tree.query(index-1));
             break;
 
         case 3:
-            int p, q;
-            scanf("%d %d", &p, &q);
+            int p;
+            long long q;
+            scanf("%d %lld", &p, &q);
             trashes.emplace_back(p, q);
             break;
 
         case 4:
-            int t;
-            scanf("%d", &t);
+            long long t;
+            scanf("%lld", &t);
             while (t > 0 && !trashes.empty())
             {
                 if (t < trashes.begin()->second)

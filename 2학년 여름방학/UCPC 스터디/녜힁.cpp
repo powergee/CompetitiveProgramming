@@ -2,35 +2,37 @@
 #include <algorithm>
 #include <vector>
 
+typedef long long Long;
+
 int n, m, q;
 std::vector<int> novel;
 std::vector<std::pair<int, int>> firstAppeared, lastAppeared;
 
-int countAvailable(int first, int right)
+int countUsing(int first)
 {
     int pivot = firstAppeared[first].first;
     auto found = std::lower_bound(lastAppeared.begin(), lastAppeared.end(), std::make_pair(pivot, -1));
     if (found != lastAppeared.end())
         found = std::next(found);
-    
-    int count = lastAppeared.end() - found;
-    return std::max(0, count);
+        
+    return lastAppeared.end() - found;
 }
 
-int countAvailable(int first, int left, int right)
+int countAvailable(int first)
 {
-    return countAvailable(first, right) - countAvailable(first, left-1);
+    return m - countUsing(first);
 }
-
-
 
 int main()
 {
     scanf("%d %d %d", &n, &m, &q);
-    firstAppeared.resize(m);
-    lastAppeared.resize(m);
+    firstAppeared.resize(m+1);
+    lastAppeared.resize(m+1);
 
-    for (int i = 0; i < m; ++i)
+    firstAppeared[0] = {-1, -1};
+    lastAppeared[0] = {-1, -1};
+
+    for (int i = 1; i <= m; ++i)
     {
         firstAppeared[i] = {-1, i};
         lastAppeared[i] = {-1, i};
@@ -40,7 +42,7 @@ int main()
     {
         int ch;
         scanf("%d", &ch);
-        novel.push_back(ch-1);
+        novel.push_back(ch);
     }
 
     for (int i = 0; i < n; ++i)
@@ -53,42 +55,37 @@ int main()
         
     std::sort(lastAppeared.begin(), lastAppeared.end());
 
-    std::vector<std::pair<int, int>> queries;
+    std::vector<std::pair<Long, int>> queries;
     for (int i = 0; i < q; ++i)
     {
-        int pos;
-        scanf("%d", &pos);
+        Long pos;
+        scanf("%lld", &pos);
         queries.emplace_back(pos, i);
     }
     std::sort(queries.begin(), queries.end());
 
     std::vector<std::pair<int, int>> answers(q);
-    int prevPos = -1;
-    std::pair<int, int> prevAnswer = {1, 0};
+    Long availSum = 0;
+    int currRow = 1;
     for (auto query : queries)
     {
-        int currPos = query.first;
-        int start = prevPos + 1;
-        int steps = currPos - prevPos;
-        
-        while (steps > 0 && prevAnswer.first != -1)
+        int availInRow;
+        while (true)
         {
-            int remainingInRow = countAvailable(prevAnswer.first, prevAnswer.second+1, m);
-            
-            if (steps > remainingInRow)
+            availInRow = countAvailable(currRow);
+            if (availInRow + availSum < query.first)
             {
-                steps -= remainingInRow;
-                ++prevAnswer.first;
-                prevAnswer.second = 0;
+                availSum += availInRow;
+                ++currRow;
             }
-            else
-            {
-                int left = prevAnswer.second, right = m;
-            }
+            else break;
         }
-
-        answers[query.second] = prevAnswer;
+        
+        
     }
+
+    for (std::pair<int, int> answer : answers)
+        printf("%d %d\n", answer.first, answer.second);
 
     return 0;
 }

@@ -5,6 +5,7 @@
 #include <vector>
 
 std::vector<std::string> words;
+std::string goal;
 
 struct Trie
 {
@@ -44,6 +45,43 @@ struct Trie
     }
 };
 
+bool isAbleToFill(std::vector<std::pair<int, int>>& coverages)
+{
+    if (coverages.empty())
+        return false;
+
+    std::pair<int, int> covUnion = coverages.back();
+    for (int i = coverages.size()-2; i >= 0; --i)
+    {
+        if (covUnion.first-1 <= coverages[i].second)
+            covUnion.first = std::min(covUnion.first, coverages[i].first);
+        else
+            return false;
+    }
+
+    return covUnion.first == 0 && covUnion.second == (int)goal.size()-1;
+}
+
+bool findLeftmost(std::vector<std::pair<int, int>>& coverages, int& lastIndex, std::pair<int, int>& interval)
+{
+    int leftmost = -1;
+    for (int i = lastIndex; i >= 0; --i)
+    {
+        if (coverages[i].second < interval.first-1)
+        {
+            lastIndex = i;
+            break;
+        }
+
+        if (leftmost == -1 && coverages[i].first < interval.first ||
+            leftmost != -1 && coverages[i].first < coverages[leftmost].first)
+            leftmost = i;
+    }
+
+    interval = coverages[leftmost];
+    return leftmost != -1;
+}
+
 int main()
 {
     std::ios_base::sync_with_stdio(false);
@@ -52,7 +90,6 @@ int main()
 
     int count;
     Trie root;
-    std::string goal;
     std::cin >> count >> goal;
 
     words.resize(count);
@@ -113,44 +150,29 @@ int main()
         
         if (current->output != -1)
         {
-            std::pair<int, int> currCover = {i-(int)words[current->output].size()+1, i};
-            while (!coverages.empty() && (
-                currCover.first <= coverages.back().first && coverages.back().second <= currCover.second ||
-                coverages.size() > 1 && currCover.first <= coverages[coverages.size()-2].second+1))
-                coverages.pop_back();
-
-            coverages.push_back(currCover);
+            int start = i - words[current->output].size() + 1;
+            coverages.emplace_back(start, i);
+            std::cout << start << ", " << i << "\n";
         }
     }
 
-    if (coverages.empty())
-        std::cout << -1;
-    else
+    if (isAbleToFill(coverages))
     {
-        int initSize = (int)coverages.size();
-        bool success = true;
-        std::pair<int, int> covUnion = coverages.back();
-        coverages.pop_back();
-
-        while (!coverages.empty() && success)
-        {
-            std::pair<int, int> current = coverages.back();
-            coverages.pop_back();
-            
-            if (current.second+1 < covUnion.first)
-                success = false;
-            else
-                covUnion.first = current.first;
-        }
-
-        if (covUnion.first != 0 || covUnion.second != (int)goal.size()-1)
-            success = false;
-        
-        if (success)
-            std::cout << initSize;
+        if (coverages.size() == 1)
+            std::cout << 1;
         else
-            std::cout << -1;
+        {
+            int answer = 1, lastIndex = (int)coverages.size()-2;
+            std::pair<int, int> interval = coverages.back();
+
+            while (findLeftmost(coverages, lastIndex, interval))
+                ++answer;
+
+            std::cout << answer;
+        }
     }
+    else
+        std::cout << -1;
 
     return 0;
 }

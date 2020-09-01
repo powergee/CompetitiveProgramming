@@ -18,7 +18,7 @@ bool isValidMatch(int aScore, int bScore, int aWin, int bWin, int aWon, int bWon
     if (aScore == 0 && bScore == 0 && aWin == 0 && bWin == 0)
         return true;
 
-    auto& result = dp[aScore][bScore][aWin][bWin][aWin][bWon][index];
+    auto& result = dp[aScore][bScore][aWin][bWin][aWon][bWon][index];
 
     if (result == NO_ANSWER)
         return false;

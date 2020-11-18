@@ -75,27 +75,3 @@ public:
         update(1, 0, count - 1, index, newVal);
     }
 };
-
-int main()
-{
-    int n, m, k;
-    scanf("%d %d %d", &n, &m, &k);
-    std::vector<Long> original(n);
-
-    for (int i = 0; i < n; ++i)
-        scanf("%lld", &original[i]);
-    
-    SegTree<Long> tree(original);
-    for (int i = 0; i < m+k; ++i)
-    {
-        Long a, b, c;
-        scanf("%lld %lld %lld", &a, &b, &c);
-
-        if (a == 1)
-            tree.update(b-1, c);
-        else
-            printf("%lld\n", tree.query(b-1, c-1));
-    }
-
-    return 0;
-}

@@ -1,11 +1,9 @@
-#include <iostream>
 #define ARRAY_SIZE 1000000
 
 typedef long long Base;
 
 Base original[ARRAY_SIZE];
 Base nodes[ARRAY_SIZE * 4];
-int n, m, k;
 
 Base initialize(int index, int start, int end)
 {

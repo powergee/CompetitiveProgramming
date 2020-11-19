@@ -1,4 +1,6 @@
+#include <iostream>
 #include <vector>
+#include <algorithm>
 #include <cmath>
 
 typedef long long Long;
@@ -82,3 +84,38 @@ public:
         update(1, 0, count - 1, index, newVal);
     }
 };
+
+int main()
+{
+    int n;
+    scanf("%d", &n);
+
+    std::vector<std::pair<Long, int>> jobs;
+    for (int i = 0; i < n; ++i)
+    {
+        int time;
+        scanf("%d", &time);
+        jobs.emplace_back(time, i);
+    }
+
+    SegTree<Long> shortJobs(n), longJobs(std::vector<Long>(n, 1));
+    std::sort(jobs.begin(), jobs.end());
+    
+    std::vector<Long> answer(n, 0);
+    for (int i = 0; i < n; ++i)
+    {
+        if (jobs[i].second > 0)
+            answer[jobs[i].second] += shortJobs.query(0, jobs[i].second - 1) + longJobs.query(0, jobs[i].second - 1) * jobs[i].first;
+        if (jobs[i].second < n-1)
+            answer[jobs[i].second] += shortJobs.query(jobs[i].second + 1, n-1) + longJobs.query(jobs[i].second + 1, n-1) * (jobs[i].first-1);
+        answer[jobs[i].second] += jobs[i].first;
+
+        longJobs.update(jobs[i].second, 0);
+        shortJobs.update(jobs[i].second, jobs[i].first);
+    }
+
+    for (int i = 0; i < n; ++i)
+        printf("%lld\n", answer[i]);
+
+    return 0;
+}

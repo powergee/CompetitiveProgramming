@@ -6,6 +6,7 @@ class SegTree {
 private:
     int count;
     std::vector<T> tree;
+    std::vector<T> lazy;
 
     T initialize(int index, int start, int end, const std::vector<T>& original) {
         if (start == end) {
@@ -19,7 +20,21 @@ private:
         return tree[index] = (left + right);
     }
 
+    void propagate(int index, int start, int end) {
+        if (lazy[index] != 0) {
+            tree[index] += lazy[index] * (end - start + 1);
+
+            if (start != end) {
+                lazy[index * 2] += lazy[index];
+                lazy[index * 2 + 1] += lazy[index];
+            }
+
+            lazy[index] = 0;
+        }
+    }
+
     T query(int index, int nodeStart, int nodeEnd, int reqStart, int reqEnd) {
+        propagate(index, nodeStart, nodeEnd);
         int nodeMid = (nodeStart + nodeEnd) / 2;
 
         if (nodeStart > reqEnd || nodeEnd < reqStart) {
@@ -33,18 +48,23 @@ private:
         }
     }
 
-    void update(T value, int updatePos, int treeIndex, int treeStart, int treeEnd) {
-        if (treeStart == updatePos && updatePos == treeEnd) {
-            tree[treeIndex] = value;
+    void update(T add, int dataStart, int dataEnd, int treeIndex, int treeStart, int treeEnd) {
+        propagate(treeIndex, treeStart, treeEnd);
+        int treeMid = (treeStart + treeEnd) / 2;
+
+        if (dataEnd < treeStart || treeEnd < dataStart) {
+            return;
+        } if (dataStart <= treeStart && treeEnd <= dataEnd) {
+            tree[treeIndex] += add * (treeEnd - treeStart + 1);
+            if (treeStart != treeEnd) {
+                lazy[treeIndex * 2] += add;
+                lazy[treeIndex * 2 + 1] += add;
+            }
             return;
         }
 
-        int treeMid = (treeStart + treeEnd) / 2;
-        if (updatePos <= treeMid) {
-            update(value, updatePos, treeIndex * 2, treeStart, treeMid);
-        } else {
-            update(value, updatePos, treeIndex * 2 + 1, treeMid + 1, treeEnd);
-        }
+        update(add, dataStart, dataEnd, treeIndex * 2, treeStart, treeMid);
+        update(add, dataStart, dataEnd, treeIndex * 2 + 1, treeMid + 1, treeEnd);
         tree[treeIndex] = tree[treeIndex * 2] + tree[treeIndex * 2 + 1];
     }
     
@@ -54,6 +74,7 @@ public:
         int treeHeight = (int)ceil(log2(count));
         int vecSize = (1 << (treeHeight + 1));
         tree.resize(vecSize);
+        lazy.resize(vecSize);
         initialize(1, 0, count - 1, original);
     }
 
@@ -62,13 +83,14 @@ public:
         int treeHeight = (int)ceil(log2(count));
         int vecSize = (1 << (treeHeight + 1));
         tree.resize(vecSize);
+        lazy.resize(vecSize);
     }
 
     T query(int start, int end) {
         return query(1, 0, count - 1, start, end);
     }
 
-    void update(T value, int pos) {
-        update(value, pos, 1, 0, count - 1);
+    void update(T add, int start, int end) {
+        update(add, start, end, 1, 0, count - 1);
     }
 };

@@ -1,5 +1,6 @@
 #include <vector>
 #include <cmath>
+#include <iostream>
 
 template<typename T>
 class SegTree {
@@ -72,3 +73,67 @@ public:
         update(value, pos, 1, 0, count - 1);
     }
 };
+
+int main() {
+    int n, k;
+    while (scanf("%d %d", &n, &k) != EOF) {
+        std::vector<int> sign;
+        std::vector<int> zero;
+        for (int i = 0; i < n; ++i) {
+            int v;
+            scanf("%d", &v);
+
+            if (v > 0) {
+                sign.push_back(0);
+                zero.push_back(0);
+            } else if (v < 0) {
+                sign.push_back(1);
+                zero.push_back(0);
+            } else {
+                sign.push_back(0);
+                zero.push_back(1);
+            }
+        }
+
+        SegTree<int> signTree(sign);
+        SegTree<int> zeroTree(zero);
+
+        for (int i = 0; i < k; ++i) {
+            char op[2];
+            int v1, v2;
+            scanf("%s %d %d", op, &v1, &v2);
+            
+            switch (op[0])
+            {
+            case 'C':
+                --v1;
+                if (v2 > 0) {
+                    signTree.update(0, v1);
+                    zeroTree.update(0, v1);
+                } else if (v2 < 0) {
+                    signTree.update(1, v1);
+                    zeroTree.update(0, v1);
+                } else {
+                    signTree.update(0, v1);
+                    zeroTree.update(1, v1);
+                }
+                break;
+                
+            case 'P':
+                --v1, --v2;
+                if (zeroTree.query(v1, v2)) {
+                    printf("0");
+                } else if (signTree.query(v1, v2) % 2 == 1) {
+                    printf("-");
+                } else {
+                    printf("+");
+                }
+                break;
+            }
+        }
+
+        printf("\n");
+    }
+
+    return 0;
+}

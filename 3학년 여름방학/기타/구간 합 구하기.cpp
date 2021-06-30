@@ -1,3 +1,4 @@
+#include <iostream>
 #include <vector>
 #include <cmath>
 
@@ -8,7 +9,6 @@ class SegTree {
 private:
     int originCount;
     std::vector<T> tree;
-    std::vector<T> lazy;
     
     void initialize(int index, int start, int end, const std::vector<T>& original) {
         if (start == end) {
@@ -21,20 +21,7 @@ private:
         }
     }
 
-    void propagate(int index, int start, int end) {
-        if (lazy[index]) {
-            tree[index] += lazy[index] * (end-start+1);
-            if (start < end) {
-                lazy[index*2] += lazy[index];
-                lazy[index*2+1] += lazy[index];
-            }
-            lazy[index] = 0;
-        }
-    }
-
     T query(int index, int reqStart, int reqEnd, int treeStart, int treeEnd) {
-        propagate(index, treeStart, treeEnd);
-
         if (reqStart <= treeStart && treeEnd <= reqEnd) {
             return tree[index];
         } else if (treeStart <= reqEnd && reqStart <= treeEnd) {
@@ -46,16 +33,13 @@ private:
         }
     }
 
-    void update(T add, int index, int reqStart, int reqEnd, int treeStart, int treeEnd) {
-        propagate(index, treeStart, treeEnd);
-
-        if (reqStart <= treeStart && treeEnd <= reqEnd) {
-            lazy[index] += add;
-            propagate(index, treeStart, treeEnd);
-        } else if (treeStart <= reqEnd && reqStart <= treeEnd) {
+    void update(T add, int index, int reqPos, int treeStart, int treeEnd) {
+        if (treeStart == reqPos && treeEnd == reqPos) {
+            tree[index] += add;
+        } else if (treeStart <= reqPos && reqPos <= treeEnd) {
             int treeMed = (treeStart + treeEnd) / 2;
-            update(add, index*2, reqStart, reqEnd, treeStart, treeMed);
-            update(add, index*2+1, reqStart, reqEnd, treeMed+1, treeEnd);
+            update(add, index*2, reqPos, treeStart, treeMed);
+            update(add, index*2+1, reqPos, treeMed+1, treeEnd);
             tree[index] = tree[index*2] + tree[index*2+1];
         }
     }
@@ -66,7 +50,6 @@ public:
         int treeHeight = (int)std::ceil((float)std::log2(originCount));
         int vecSize = (1 << (treeHeight+1));
         tree.resize(vecSize);
-        lazy.resize(vecSize);
         initialize(1, 0, originCount-1, original);
     }
 
@@ -75,14 +58,51 @@ public:
         int treeHeight = (int)std::ceil((float)std::log2(originCount));
         int vecSize = (1 << (treeHeight+1));
         tree.resize(vecSize);
-        lazy.resize(vecSize);
     }
 
     T query(int start, int end) {
         return query(1, start, end, 0, originCount-1);
     }
 
-    void update(int start, int end, T add) {
-        update(add, 1, start, end, 0, originCount-1);
+    void update(int pos, T add) {
+        update(add, 1, pos, 0, originCount-1);
     }
 };
+
+int main() {
+    int n, m, k;
+    scanf("%d %d %d", &n, &m, &k);
+
+    std::vector<Long> arr;
+    for (int i = 0; i < n; ++i) {
+        Long val;
+        scanf("%lld", &val);
+        arr.push_back(val);
+    }
+    SegTree<Long> tree(arr);
+
+    for (int i = 0; i < m+k; ++i) {
+        int kind;
+        scanf("%d", &kind);
+
+        switch (kind) {
+            case 1: {
+                int pos;
+                Long newVal;
+                scanf("%d %lld", &pos, &newVal);
+                Long oldVal = tree.query(pos-1, pos-1);
+                tree.update(pos-1, newVal-oldVal);
+                break;
+            }
+        
+            case 2: {
+                int left, right;
+                scanf("%d %d", &left, &right);
+                printf("%lld\n", tree.query(left-1, right-1));
+                break;
+            }
+        }
+    }
+
+    return 0;
+}

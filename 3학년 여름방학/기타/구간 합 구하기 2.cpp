@@ -1,3 +1,5 @@
+#include <iostream>
+#include <algorithm>
 #include <vector>
 #include <cmath>
 
@@ -70,14 +72,6 @@ public:
         initialize(1, 0, originCount-1, original);
     }
 
-    SegTree(int count) {
-        originCount = count;
-        int treeHeight = (int)std::ceil((float)std::log2(originCount));
-        int vecSize = (1 << (treeHeight+1));
-        tree.resize(vecSize);
-        lazy.resize(vecSize);
-    }
-
     T query(int start, int end) {
         return query(1, start, end, 0, originCount-1);
     }
@@ -86,3 +80,37 @@ public:
         update(add, 1, start, end, 0, originCount-1);
     }
 };
+
+int main() {
+    int n, m, k;
+    scanf("%d %d %d", &n, &m, &k);
+
+    std::vector<Long> arr;
+    for (int i = 0; i < n; ++i) {
+        Long val;
+        scanf("%lld", &val);
+        arr.push_back(val);
+    }
+    SegTree<Long> tree(arr);
+
+    for (int i = 0; i < m+k; ++i) {
+        int kind, left, right;
+        scanf("%d %d %d", &kind, &left, &right);
+        left--, right--;
+
+        switch (kind)
+        {
+        case 1:
+            Long val;
+            scanf("%lld", &val);
+            tree.update(left, right, val);
+            break;
+        
+        case 2:
+            printf("%lld\n", tree.query(left, right));
+            break;
+        }
+    }
+
+    return 0;
+}

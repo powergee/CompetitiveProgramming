@@ -45,23 +45,20 @@ void FFT(std::vector<Complex> &a, bool isReversed = false) {
     }
 }
 
-std::vector<Complex> getConvolution(std::vector<Complex> &a, std::vector<Complex> &b) {
+std::vector<Complex> getSquare(std::vector<Complex> &a) {
 	auto aCopy = a;
-	auto bCopy = b;
 	unsigned n = 1;
-	while (n <= a.size() || n <= b.size()) {
+	while (n <= a.size()) {
 		n *= 2;
     }
-    n *= 2;
+	n *= 2;
 
 	aCopy.resize(n, 0);
-	bCopy.resize(n, 0);
     FFT(aCopy);
-    FFT(bCopy);
 
 	std::vector<Complex> result(n);
     for (unsigned i = 0; i < n; i++) {
-        result[i] = aCopy[i] * bCopy[i];
+        result[i] = aCopy[i] * aCopy[i];
     }
     FFT(result, true);
 
@@ -89,19 +86,7 @@ int main() {
         }
     }
     
-    unsigned convLength = 1;
-    while (convLength <= primes.size()) {
-        convLength <<= 1;
-    }
-    convLength <<= 1;
-
-    primes.resize(convLength, 0);
-    FFT(primes);
-    std::vector<Complex> conv(convLength);
-    for (unsigned i = 0; i < convLength; i++) {
-        conv[i] = primes[i] * primes[i];
-    }
-    FFT(conv, true);
+    auto conv = getSquare(primes);
 
     int T;
     scanf("%d", &T);

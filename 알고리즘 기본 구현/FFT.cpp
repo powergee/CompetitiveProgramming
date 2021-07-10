@@ -67,3 +67,23 @@ std::vector<Complex> getConvolution(std::vector<Complex> &a, std::vector<Complex
 
 	return result;
 }
+
+std::vector<Complex> getSquare(std::vector<Complex> &a) {
+	auto aCopy = a;
+	unsigned n = 1;
+	while (n <= a.size()) {
+		n *= 2;
+    }
+	n *= 2;
+
+	aCopy.resize(n, 0);
+    FFT(aCopy);
+
+	std::vector<Complex> result(n);
+    for (unsigned i = 0; i < n; i++) {
+        result[i] = aCopy[i] * aCopy[i];
+    }
+    FFT(result, true);
+
+	return result;
+}

@@ -1,5 +1,6 @@
 #include <vector>
 #include <algorithm>
+#include <iostream>
 #define LEFT_MAX 1001
 #define RIGHT_MAX 1001
 
@@ -22,12 +23,27 @@ bool findValidPair(int start) {
     return false;
 }
 
-int bipartite(int N) {
+int main() {
+    int n, m;
+    scanf("%d %d", &n, &m);
+
+    for (int i = 1; i <= n; ++i) {
+        int count;
+        scanf("%d", &count);
+        while (count--) {
+            int work;
+            scanf("%d", &work);
+            connected[i].push_back(work);
+        }
+    }
+
     int result = 0;
-    
-    for (int i = 1; i <= N; ++i) {
-        std::fill(visited, visited + N+1, false);
+    for (int i = 1; i <= n; ++i) {
+        std::fill(visited, visited+n+1, false);
         result += (findValidPair(i) ? 1 : 0);
     }
-    return result;
+
+    printf("%d", result);
+
+    return 0;
 }

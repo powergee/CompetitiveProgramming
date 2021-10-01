@@ -3,104 +3,98 @@
 #include <queue>
 #include <string>
 
-struct Trie
-{
+struct Trie {
     Trie *next[26];
     Trie *fail;
     // 실제 매칭된 문자열이 필요하다면 아래 정의 사용
-    // std::vector<std::string> outputs;
+    // vector<string> outputs;
     // 매칭 여부만 필요하다면
     bool matched = false;
 
-    Trie()
-    {
+    Trie() {
         std::fill(next, next + 26, nullptr);
     }
 
-    ~Trie()
-    {
-        for (int i = 0; i < 26; i++)
-            if (next[i])
+    ~Trie() {
+        for (int i = 0; i < 26; i++) {
+            if (next[i]) {
                 delete next[i];
+            }
+        }
     }
-    void insert(std::string &str, int start)
-    {
-        if ((int)str.size() <= start)
-        {
+
+    void insert(std::string &str, int start) {
+        if ((int)str.size() <= start) {
+            // 실제 매칭된 문자열이 필요하다면 아래 정의 사용
             //outputs.push_back(str);
+            // 매칭 여부만 필요하다면
             matched = true;
             return;
         }
         int nextIdx = str[start] - 'a';
-        if (!next[nextIdx])
-        {
+        if (!next[nextIdx]) {
             next[nextIdx] = new Trie;
         }
         next[nextIdx]->insert(str, start + 1);
     }
 };
 
-void buildFail(Trie *root)
-{
+void buildFail(Trie *root) {
     std::queue<Trie *> q;
     root->fail = root;
     q.push(root);
-    while (!q.empty())
-    {
+
+    while (!q.empty()) {
         Trie *current = q.front();
         q.pop();
 
-        for (int i = 0; i < 26; i++)
-        {
+        for (int i = 0; i < 26; i++) {
             Trie *next = current->next[i];
 
-            if (!next)
+            if (!next) {
                 continue;
-            if (current == root)
+            } else if (current == root) {
                 next->fail = root;
-            else
-            {
+            } else {
                 Trie *dest = current->fail;
-
-                while (dest != root && !dest->next[i])
+                while (dest != root && !dest->next[i]) {
                     dest = dest->fail;
-
-                if (dest->next[i])
+                }
+                if (dest->next[i]) {
                     dest = dest->next[i];
+                }
                 next->fail = dest;
             }
 
-            /*if(next->fail->outputs.size() > 0) 
-                next->outputs.insert(next->outputs.end(), current->outputs.begin(), current->outputs.end());*/
-            if (next->fail->matched)
+            // 실제 매칭된 문자열이 필요하다면 아래 정의 사용
+            // if (next->fail->outputs.size() > 0) {
+            //     next->outputs.insert(next->outputs.end(), current->outputs.begin(), current->outputs.end());
+            // }
+            // 매칭 여부만 필요하다면
+            if (next->fail->matched) {
                 next->matched = true;
-
+            }
             q.push(next);
         }
     }
 }
 
-bool find(Trie *root, std::string &query)
-{
+bool find(Trie *root, std::string &query) {
     Trie *current = root;
     bool result = false;
 
-    for (int c = 0; c < (int)query.size(); c++)
-    {
+    for (int c = 0; c < (int)query.size(); c++) {
         int nextIdx = query[c] - 'a';
-
-        while (current != root && !current->next[nextIdx])
+        while (current != root && !current->next[nextIdx]) {
             current = current->fail;
-
-        if (current->next[nextIdx])
+        }
+        if (current->next[nextIdx]) {
             current = current->next[nextIdx];
-
-        if (current->matched)
-        {
+        }
+        if (current->matched) {
             result = true;
             break;
         }
     }
-
     return result;
 }

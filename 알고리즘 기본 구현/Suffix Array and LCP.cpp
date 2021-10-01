@@ -1,61 +1,48 @@
 #include <string>
 #include <vector>
 #include <algorithm>
+#include <numeric>
 
-bool cmp(int i, int j, int d, int N, std::vector<int>& pos)
-{
-    if (pos[i] != pos[j])
-        return pos[i] < pos[j];
-        
-    i += d;
-    j += d;
-    return (i < N && j < N) ? (pos[i] < pos[j]) : (i > j);
-}
+void extractLCP(const std::string& str, std::vector<int>& sa, std::vector<int>& group, std::vector<int>& lcp) {
+    int n = str.size();
+    sa.resize(n);
+    group.resize(n);
+    lcp.resize(n-1);
 
-// sa: 결과 접미사 배열 (원소의 값은 접미사의 시작 인덱스)
-// pos: 그룹의 번호
-void buildSufArr(std::string& str, std::vector<int>& sa, std::vector<int>& pos)
-{
-    int N = (int)str.size();
-    sa.resize(N, 0);
-    pos.resize(N, 0);
-
-    for (int i = 0; i < N; i++)
-    {
-        sa[i] = i;
-        pos[i] = str[i];
+    std::iota(sa.begin(), sa.end(), 0);
+    for (int i = 0; i < sa.size(); ++i) {
+        group[i] = str[i];
     }
-    
-    for (int d = 1;; d *= 2)
-    {
-        std::sort(sa.begin(), sa.end(), [&](int a, int b) {
-            return cmp(a, b, d, N, pos);
-        });
 
-        std::vector<int> temp(N, 0);
-        for (int i = 0; i < N - 1; i++)
-            temp[i + 1] = temp[i] + cmp(sa[i], sa[i + 1], d, N, pos);
-        for (int i = 0; i < N; i++)
-            pos[sa[i]] = temp[i];
+    for (int d = 1; ; d <<= 1) {
+        auto compareSuffix = [&](int s1, int s2) -> bool {
+            if (group[s1] != group[s2]) {
+                return group[s1] < group[s2];
+            } else if (s1+d < n && s2+d < n) {
+                return group[s1+d] < group[s2+d];
+            } else {
+                return s1 > s2;
+            }
+        };
+        std::sort(sa.begin(), sa.end(), compareSuffix);
 
-        if (temp[N - 1] == N - 1)
+        std::vector<int> newGroup(n, 0);
+        for (int i = 0; i < n-1; ++i) {
+            newGroup[i+1] = newGroup[i] + (compareSuffix(sa[i], sa[i+1]) ? 1 : 0);
+        }
+        for (int i = 0; i < n; ++i) {
+            group[sa[i]] = newGroup[i];
+        }
+
+        if (newGroup.back() == n-1) {
             break;
+        }
     }
-}
 
-// lcp: 접미사 배열에서 자신의 뒤에 있는 원소와의 공통된 prefix의 길이
-void buildLCP(std::string& str, std::vector<int>& lcp)
-{
-    int N = (int)str.size();
-    std::vector<int> sa, pos;
-    buildSufArr(str, sa, pos);
-    lcp.resize(N, 0);
-
-    for(int i=0, k=0; i<N; i++, k=std::max(k-1, 0)) {
-        if(pos[i] == N-1)
-            continue;
-
-        for(int j=sa[pos[i]+1]; str[i+k]==str[j+k]; k++);
-        lcp[pos[i]] = k;
+    for (int i = 0, k = 0; i < n; ++i, k = std::max(k-1, 0)) {
+        if (group[i] != n-1) {
+            for (int j = sa[group[i]+1]; str[i+k] == str[j+k]; ++k);
+            lcp[group[i]] = k;
+        }
     }
 }

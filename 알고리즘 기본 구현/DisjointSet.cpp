@@ -1,27 +1,24 @@
 #include <vector>
 
-class DisjointSet
-{
+class DisjointSet {
 private:
     std::vector<int> parent;
 public:
-    DisjointSet(int count)
-    {
+    DisjointSet(int count) {
         parent.resize(count);
-        for (int i = 0; i < count; ++i)
+        for (int i = 0; i < count; ++i) {
             parent[i] = i;
+        }
     }
 
-    int findParent(int x)
-    {
-        if (x == parent[x])
+    int findParent(int x) {
+        if (x == parent[x]) {
             return x;
-        
+        }
         return parent[x] = findParent(parent[x]);
     }
 
-    void unionNodes(int x, int y)
-    {
+    void unionNodes(int x, int y) {
         int xPar = findParent(x);
         int yPar = findParent(y);
 

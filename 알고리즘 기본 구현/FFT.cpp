@@ -49,10 +49,9 @@ std::vector<Complex> getConvolution(std::vector<Complex> &a, std::vector<Complex
 	auto aCopy = a;
 	auto bCopy = b;
 	unsigned n = 1;
-	while (n <= a.size() || n <= b.size()) {
+	while (n < a.size() + b.size()) {
 		n *= 2;
     }
-	n *= 2;
 
 	aCopy.resize(n, 0);
 	bCopy.resize(n, 0);
@@ -71,10 +70,9 @@ std::vector<Complex> getConvolution(std::vector<Complex> &a, std::vector<Complex
 std::vector<Complex> getSquare(std::vector<Complex> &a) {
 	auto aCopy = a;
 	unsigned n = 1;
-	while (n <= a.size()) {
+	while (n < 2*a.size()) {
 		n *= 2;
     }
-	n *= 2;
 
 	aCopy.resize(n, 0);
     FFT(aCopy);

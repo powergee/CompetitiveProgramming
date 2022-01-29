@@ -1,5 +1,6 @@
+#include <iostream>
+
 typedef long long Long;
-const Long MOD = 1000000007;
 
 Long getInverse(Long val, int mod) {
     Long r1 = mod, r2 = val, s1 = 1, s2 = 0, t1 = 0, t2 = 1;
@@ -31,14 +32,32 @@ Long getInverse(Long val, int mod) {
     return 0;
 }
 
-Long getComb(Long n, Long k) {
+Long getCombNaively(int n, int k, Long mod) {
     Long num = 1, den = 1;
     for (int i = 0; i < k; ++i) {
         num *= n-i;
-        num %= MOD;
+        num %= mod;
         den *= i+1;
-        den %= MOD;
+        den %= mod;
     }
-    Long result = num * getInverse(den, MOD) % MOD;
+    Long result = num * getInverse(den, mod) % mod;
     return result;
+}
+
+Long getComb(Long n, Long k, Long mod) {
+    Long answer = 1;
+    while (n && k) {
+        answer *= getCombNaively(n%mod, k%mod, mod);
+        answer %= mod;
+        n /= mod;
+        k /= mod;
+    }
+    return answer;
+}
+
+int main() {
+    Long n, k, mod;
+    scanf("%lld %lld %lld", &n, &k, &mod);
+    printf("%lld", getComb(n, k, mod));
+    return 0;
 }

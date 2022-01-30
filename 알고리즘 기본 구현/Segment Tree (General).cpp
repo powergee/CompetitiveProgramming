@@ -8,6 +8,7 @@ class SegTree {
 private:
     int originCount;
     std::vector<T> tree;
+    std::function<T(T, T)> reduce;
     
     void initialize(int index, int start, int end, const std::vector<T>& original) {
         if (start == end) {
@@ -16,19 +17,28 @@ private:
             int mid = (start + end) / 2;
             initialize(index*2, start, mid, original);
             initialize(index*2+1, mid+1, end, original);
-            tree[index] = tree[index*2] + tree[index*2+1];
+            tree[index] = reduce(tree[index*2], tree[index*2+1]);
         }
     }
 
     T query(int index, int reqStart, int reqEnd, int treeStart, int treeEnd) {
-        if (reqStart <= treeStart && treeEnd <= reqEnd) {
+        reqStart = std::max(reqStart, treeStart);
+        reqEnd = std::min(reqEnd, treeEnd);
+        if (reqStart == treeStart && treeEnd == reqEnd) {
             return tree[index];
-        } else if (treeStart <= reqEnd && reqStart <= treeEnd) {
-            int treeMed = (treeStart + treeEnd) / 2;
-            return query(index*2, reqStart, reqEnd, treeStart, treeMed)
-                 + query(index*2+1, reqStart, reqEnd, treeMed+1, treeEnd);
+        }
+
+        int treeMid = (treeStart+treeEnd)/2;
+        bool left = !(treeMid < reqStart);
+        bool right = !(reqEnd <= treeMid);
+
+        if (left && right) {
+            return reduce(query(index*2, reqStart, reqEnd, treeStart, treeMid),
+                          query(index*2+1, reqStart, reqEnd, treeMid+1, treeEnd));
+        } else if (left) {
+            return query(index*2, reqStart, reqEnd, treeStart, treeMid);
         } else {
-            return 0;
+            return query(index*2+1, reqStart, reqEnd, treeMid+1, treeEnd);
         }
     }
 
@@ -39,24 +49,20 @@ private:
             int treeMed = (treeStart + treeEnd) / 2;
             update(add, index*2, reqPos, treeStart, treeMed);
             update(add, index*2+1, reqPos, treeMed+1, treeEnd);
-            tree[index] = tree[index*2] + tree[index*2+1];
+            tree[index] = reduce(tree[index*2], tree[index*2+1]);
         }
     }
 
 public:
-    SegTree(const std::vector<T>& original) {
-        originCount = (int)original.size();
-        int treeHeight = (int)std::ceil((float)std::log2(originCount));
-        int vecSize = (1 << (treeHeight+1));
-        tree.resize(vecSize);
-        initialize(1, 0, originCount-1, original);
-    }
-
-    SegTree(int count) {
+    SegTree(int count, std::function<T(T, T)> reduce) : reduce(reduce) {
         originCount = count;
         int treeHeight = (int)std::ceil((float)std::log2(originCount));
         int vecSize = (1 << (treeHeight+1));
         tree.resize(vecSize);
+    }
+
+    SegTree(const std::vector<T>& original, std::function<T(T, T)> reduce) : SegTree(original.size(), reduce) {
+        initialize(1, 0, originCount-1, original);
     }
 
     T query(int start, int end) {

@@ -35,7 +35,7 @@ int main() {
             }
         }
 
-        std::vector<std::pair<int, int>> locked[26];
+        std::queue<std::pair<int, int>> locked[26];
         std::queue<std::pair<int, int>> q;
         std::vector<std::vector<bool>> visited(h);
 
@@ -46,7 +46,7 @@ int main() {
                     if (map[i][j] == '.' || map[i][j] == '$' || islower(map[i][j]) || hasKey[map[i][j]-'A']) {
                         q.emplace(i, j);
                     } else {
-                        locked[map[i][j]-'A'].emplace_back(i, j);
+                        locked[map[i][j]-'A'].emplace(i, j);
                     }
                 }
             }
@@ -63,6 +63,15 @@ int main() {
 
             if (map[curr.first][curr.second] == '$') {
                 ++answer;
+            } else if (islower(map[curr.first][curr.second])) {
+                hasKey[map[curr.first][curr.second]-'a'] = true;
+                while (!locked[map[curr.first][curr.second]-'a'].empty()) {
+                    auto pos = locked[map[curr.first][curr.second]-'a'].front();
+                    locked[map[curr.first][curr.second]-'a'].pop();
+                    if (!visited[pos.first][pos.second]) {
+                        q.emplace(pos.first, pos.second);
+                    }
+                }
             }
 
             const static int dr[] = { 0, 0, 1, -1 };
@@ -73,21 +82,14 @@ int main() {
                 
                 if (!isValid(nr, nc) || visited[nr][nc] || map[nr][nc] == '*') {
                     continue;
-                } else if (map[nr][nc] == '.' || map[nr][nc] == '$') {
-                    q.emplace(nr, nc);
-                } else if (islower(map[nr][nc])) {
-                    hasKey[map[nr][nc]-'a'] = true;
-                    q.emplace(nr, nc);
-                    for (auto pos : locked[map[nr][nc]-'a']) {
-                        if (!visited[pos.first][pos.second]) {
-                            q.emplace(pos.first, pos.second);
-                        }
+                } else if (isupper(map[nr][nc])) {
+                    if (hasKey[map[nr][nc]-'A']) {
+                        q.emplace(nr, nc);
+                    } else {
+                        locked[map[nr][nc]-'A'].emplace(nr, nc);
                     }
-                    locked[map[nr][nc]-'a'].clear();
-                } else if (hasKey[map[nr][nc]-'A']) {
-                    q.emplace(nr, nc);
                 } else {
-                    locked[map[nr][nc]-'A'].emplace_back(nr, nc);
+                    q.emplace(nr, nc);
                 }
             }
         }

@@ -97,7 +97,7 @@ void factorize(Long n, std::vector<Long>& result) {
         xs = f(xs);
         xt = f(f(xt));
         factor = std::gcd(std::abs(xs-xt), n);
-    } while (factor == 1);
+    } while (factor == 1 || factor == n);
 
     factorize(factor, result);
     factorize(n/factor, result);

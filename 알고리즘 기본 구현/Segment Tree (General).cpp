@@ -53,6 +53,17 @@ private:
         }
     }
 
+    int findLowerBound(T sum, int index, int treeStart, int treeEnd) {
+        int treeMid = (treeStart+treeEnd) / 2;
+        if (treeStart == treeEnd) {
+            return treeStart;
+        } else if (tree[index*2] < sum) {
+            return findLowerBound(sum-tree[index*2], index*2+1, treeMid+1, treeEnd);
+        } else {
+            return findLowerBound(sum, index*2, treeStart, treeMid);
+        }
+    }
+
 public:
     SegTree(int count, std::function<T(T, T)> reduce) : reduce(reduce) {
         originCount = count;
@@ -71,5 +82,9 @@ public:
 
     void update(int pos, T add) {
         update(add, 1, pos, 0, originCount-1);
+    }
+
+    int findLowerBound(T sum) {
+        return findLowerBound(sum, 1, 0, originCount-1);
     }
 };

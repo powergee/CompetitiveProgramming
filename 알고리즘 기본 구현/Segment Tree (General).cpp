@@ -1,3 +1,4 @@
+#include <functional>
 #include <vector>
 #include <cmath>
 
@@ -88,3 +89,16 @@ public:
         return findLowerBound(sum, 1, 0, originCount-1);
     }
 };
+
+#include <iostream>
+#include <numeric>
+
+int main() {
+    SegTree<int> sumTree(10, std::plus<int>());
+    SegTree<int> multTree(10, std::multiplies<int>());
+    SegTree<int> gcdTree(10, std::gcd<int, int>);
+    SegTree<int> maxTree(10, [](int a, int b) { return std::max(a, b); });
+    SegTree<int> minTree(10, [](int a, int b) { return std::min(a, b); });
+
+    return 0;
+}

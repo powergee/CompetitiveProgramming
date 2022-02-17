@@ -1,15 +1,15 @@
-#include <algorithm>
 #include <vector>
 #include <queue>
+#include <algorithm>
 
 const int INF = INT32_MAX/2;
 
 struct Edge {
-    int src, dst, flow, capacity;
+    int src, dst, flow, cost, capacity;
     Edge* opposite;
 
-    Edge(int src, int dst, int capacity)
-        : src(src), dst(dst), flow(0), capacity(capacity) {}
+    Edge(int src, int dst, int cost, int capacity)
+        : src(src), dst(dst), flow(0), cost(cost), capacity(capacity) {}
 
     void addFlow(int add) {
         flow += add;
@@ -23,26 +23,40 @@ struct Edge {
     }
 };
 
+struct MCMF {
+    int flowed, totalCost;
+};
+
 class Graph {
 private:
     std::vector<std::vector<Edge*>> graph;
 
     bool findAugPath(int src, int dst, std::vector<Edge*>& path) {
         std::vector<Edge*> prev(graph.size(), nullptr);
+        std::vector<int> dist(graph.size(), INF);
+        std::vector<bool> inQueue(graph.size(), false);
         std::queue<int> q;
+
+        dist[src] = 0;
+        inQueue[src] = true;
         q.push(src);
 
-        while (!q.empty() && prev[dst] == nullptr) {
+        while (!q.empty()) {
             int u = q.front();
             q.pop();
+            inQueue[u] = false;
 
             for (Edge* e : graph[u]) {
+                if (e->getSpare() <= 0) {
+                    continue;
+                }
                 int v = e->dst;
-                if (e->getSpare() > 0 && v != src && u != v && prev[v] == nullptr) {
-                    q.push(v);
+                if (dist[u] + e->cost < dist[v]) {
+                    dist[v] = dist[u] + e->cost;
                     prev[v] = e;
-                    if (prev[dst]) {
-                        break;
+                    if (!inQueue[v]) {
+                        inQueue[v] = true;
+                        q.push(v);
                     }
                 }
             }
@@ -63,38 +77,33 @@ public:
         graph.resize(vertexCount);
     }
 
-    ~Graph() {
-        for (auto& edges : graph) {
-            for (Edge* e : edges) {
-                if (e) { delete e; }
-            }
-        }
-    }
-
-    void addEdge(int src, int dst, int capacity) {
-        Edge* curr = new Edge(src, dst, capacity);
-        Edge* oppo = new Edge(dst, src, 0);
+    void addEdge(int src, int dst, int cost, int capacity) {
+        Edge* curr = new Edge(src, dst, cost, capacity);
+        Edge* oppo = new Edge(dst, src, -cost, 0);
         curr->opposite = oppo;
         oppo->opposite = curr;
         graph[src].push_back(curr);
         graph[dst].push_back(oppo);
     }
 
-    int getMaxFlow(int src, int dst) {
-        int result = 0;
+    MCMF getMinCostMaxFlow(int src, int dst) {
+        MCMF result = { 0, 0 };
         std::vector<Edge*> path;
 
         while (findAugPath(src, dst, path)) {
             int add = INT32_MAX;
+            int costSum = 0;
 
             for (Edge* e : path) {
                 add = std::min(add, e->getSpare());
             }
             for (Edge* e : path) {
                 e->addFlow(add);
+                costSum += e->cost;
             }
 
-            result += add;
+            result.flowed += add;
+            result.totalCost += costSum * add;
         }
 
         return result;

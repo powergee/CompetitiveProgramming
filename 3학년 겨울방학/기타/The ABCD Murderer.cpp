@@ -1,3 +1,4 @@
+#include <iostream>
 #include <algorithm>
 #include <vector>
 #include <queue>
@@ -6,10 +7,7 @@
 struct Trie {
     Trie *next[26];
     Trie *fail;
-    // 실제 매칭된 문자열이 필요하다면 아래 정의 사용
-    // vector<string> outputs;
-    // 매칭 여부만 필요하다면
-    bool matched = false;
+    int matched = 0;
 
     Trie() {
         std::fill(next, next + 26, nullptr);
@@ -25,10 +23,7 @@ struct Trie {
 
     void insert(std::string &str, int start) {
         if ((int)str.size() <= start) {
-            // 실제 매칭된 문자열이 필요하다면 아래 정의 사용
-            //outputs.push_back(str);
-            // 매칭 여부만 필요하다면
-            matched = true;
+            matched = str.size();
             return;
         }
         int nextIdx = str[start] - 'a';
@@ -65,36 +60,64 @@ struct Trie {
                     next->fail = dest;
                 }
 
-                // 실제 매칭된 문자열이 필요하다면 아래 정의 사용
-                // if (next->fail->outputs.size() > 0) {
-                //     next->outputs.insert(next->outputs.end(), current->outputs.begin(), current->outputs.end());
-                // }
-                // 매칭 여부만 필요하다면
                 if (next->fail->matched) {
-                    next->matched = true;
+                    next->matched = std::max(next->matched, current->matched);
                 }
                 q.push(next);
             }
         }
     }
-
-    bool find(std::string &query) {
-        Trie *current = this;
-        bool result = false;
-
-        for (int c = 0; c < (int)query.size(); c++) {
-            int nextIdx = query[c] - 'a';
-            while (current != this && !current->next[nextIdx]) {
-                current = current->fail;
-            }
-            if (current->next[nextIdx]) {
-                current = current->next[nextIdx];
-            }
-            if (current->matched) {
-                result = true;
-                break;
-            }
-        }
-        return result;
-    }
 };
+
+int main() {
+    std::cin.tie(nullptr)->sync_with_stdio(false);
+
+    int n;
+    std::cin >> n;
+
+    std::string query;
+    std::cin >> query;
+
+    Trie trie;
+    for (int i = 0; i < n; ++i) {
+        std::string word;
+        std::cin >> word;
+        trie.insert(word, 0);
+    }
+    trie.buildFail();
+
+    Trie *current = &trie;
+
+    std::vector<int> coverage(query.size(), 0);
+    for (int c = 0; c < (int)query.size(); c++) {
+        int nextIdx = query[c] - 'a';
+        while (current != &trie && !current->next[nextIdx]) {
+            current = current->fail;
+        }
+        if (current->next[nextIdx]) {
+            current = current->next[nextIdx];
+        }
+        coverage[c] = current->matched;
+    }
+
+    int coverCount = 0;
+    int currPos = query.size()-1;
+    std::vector<bool> visited(query.size(), false);
+    while (currPos >= 0) {
+        int next = INT32_MAX;
+        for (int p = currPos; p < query.size() && !visited[p]; ++p) {
+            visited[p] = true;
+            next = std::min(next, p-coverage[p]);
+        }
+        if (currPos <= next) {
+            coverCount = -1;
+            break;
+        } else {
+            currPos = next;
+            ++coverCount;
+        }
+    }
+    std::cout << coverCount;
+
+    return 0;
+}

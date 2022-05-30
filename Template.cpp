@@ -66,13 +66,28 @@ struct IO {
 
     template<typename T>
     void write(T value) {
-        std::cout << value << "\n";
+        std::cout << value << " ";
     }
 
     template<typename T, typename... Args>
     void write(T value, Args... args) {
         std::cout << value << " ";
         write(args...);
+    }
+
+    void writeLine() {
+        std::cout << "\n";
+    }
+
+    template<typename T>
+    void writeLine(T value) {
+        std::cout << value << "\n";
+    }
+
+    template<typename T, typename... Args>
+    void writeLine(T value, Args... args) {
+        std::cout << value << " ";
+        writeLine(args...);
     }
 
     void codeforces(std::function<void()> solve) {

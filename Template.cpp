@@ -7,9 +7,52 @@
 #include <array>
 #include <queue>
 #include <map>
+#include <set>
 
 using Long = long long;
 using BigInt = __int128_t;
+
+template <size_t Dim, typename T>
+struct MultiVecTemp {
+    typedef std::vector<typename MultiVecTemp<Dim-1, T>::type> type;
+};
+
+template<typename T>
+struct MultiVecTemp<1, T>  {
+    typedef T type;
+};
+
+template <size_t Dim, typename T>
+using Vector = std::vector<typename MultiVecTemp<Dim, T>::type>;
+
+template<typename T, size_t FirstDim, size_t... RestDims>
+Vector<sizeof...(RestDims)+1, T> createVector(T init) {
+    constexpr size_t DimCount = sizeof...(RestDims)+1;
+    Vector<DimCount, T> result;
+    if constexpr (DimCount > 1) {
+        auto sub = createVector<T, RestDims...>(init);
+        result.resize(FirstDim, sub);
+    } else {
+        result.resize(FirstDim, init);
+    }
+    return result;
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, std::vector<T> const &vec) {
+    for (auto it = vec.begin(); it != vec.end(); ++it) {
+        std::cout << (it == vec.begin() ? "" : " ") << *it;
+    }
+    return os;
+}
+
+template<typename T>
+std::ostream& operator<<(std::ostream& os, std::set<T> const &vec) {
+    for (auto it = vec.begin(); it != vec.end(); ++it) {
+        std::cout << (it == vec.begin() ? "" : " ") << *it;
+    }
+    return os;
+}
 
 struct IO {
     IO() {
@@ -71,23 +114,27 @@ struct IO {
 
     template<typename T, typename... Args>
     void print(T value, Args... args) {
-        std::cout << value << " ";
+        print(value);
         print(args...);
     }
 
-    void printLine() {
+    void println() {
         std::cout << "\n";
     }
 
     template<typename T>
-    void printLine(T value) {
+    void println(T value) {
         std::cout << value << "\n";
     }
 
     template<typename T, typename... Args>
-    void printLine(T value, Args... args) {
+    void println(T value, Args... args) {
         std::cout << value << " ";
-        printLine(args...);
+        println(args...);
+    }
+
+    void printYes(bool yes) {
+        println(yes ? "Yes" : "No");
     }
 
     void untilEOF(std::function<void()> solve) {

@@ -28,14 +28,11 @@ using Tensor = std::vector<typename TensorTemp<Dim, T>::type>;
 template<typename T, size_t FirstDim, size_t... RestDims>
 Tensor<sizeof...(RestDims)+1, T> createTensor(T init) {
     constexpr size_t DimCount = sizeof...(RestDims)+1;
-    Tensor<DimCount, T> result;
     if constexpr (DimCount > 1) {
-        auto sub = createTensor<T, RestDims...>(init);
-        result.resize(FirstDim, sub);
+        return Tensor<DimCount, T>(FirstDim, createTensor<T, RestDims...>(init));
     } else {
-        result.resize(FirstDim, init);
+        return Tensor<DimCount, T>(FirstDim, init);
     }
-    return result;
 }
 
 template<typename T>

@@ -13,24 +13,24 @@ using Long = long long;
 using BigInt = __int128_t;
 
 template <size_t Dim, typename T>
-struct MultiVecTemp {
-    typedef std::vector<typename MultiVecTemp<Dim-1, T>::type> type;
+struct TensorTemp {
+    typedef std::vector<typename TensorTemp<Dim-1, T>::type> type;
 };
 
 template<typename T>
-struct MultiVecTemp<1, T>  {
+struct TensorTemp<1, T>  {
     typedef T type;
 };
 
 template <size_t Dim, typename T>
-using Vector = std::vector<typename MultiVecTemp<Dim, T>::type>;
+using Tensor = std::vector<typename TensorTemp<Dim, T>::type>;
 
 template<typename T, size_t FirstDim, size_t... RestDims>
-Vector<sizeof...(RestDims)+1, T> createVector(T init) {
+Tensor<sizeof...(RestDims)+1, T> createTensor(T init) {
     constexpr size_t DimCount = sizeof...(RestDims)+1;
-    Vector<DimCount, T> result;
+    Tensor<DimCount, T> result;
     if constexpr (DimCount > 1) {
-        auto sub = createVector<T, RestDims...>(init);
+        auto sub = createTensor<T, RestDims...>(init);
         result.resize(FirstDim, sub);
     } else {
         result.resize(FirstDim, init);

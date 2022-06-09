@@ -25,13 +25,13 @@ struct TensorTemp<1, T>  {
 template <size_t Dim, typename T>
 using Tensor = std::vector<typename TensorTemp<Dim, T>::type>;
 
-template<typename T, size_t FirstDim, size_t... RestDims>
-Tensor<sizeof...(RestDims)+1, T> createTensor(T init) {
-    constexpr size_t DimCount = sizeof...(RestDims)+1;
+template<typename T, typename FirstDim, typename... RestDims>
+Tensor<sizeof...(RestDims)+1, T> createTensor(T init, FirstDim firstDim, RestDims... restDims) {
+    constexpr size_t DimCount = sizeof...(restDims)+1;
     if constexpr (DimCount > 1) {
-        return Tensor<DimCount, T>(FirstDim, createTensor<T, RestDims...>(init));
+        return Tensor<DimCount, T>(firstDim, createTensor<T>(init, restDims...));
     } else {
-        return Tensor<DimCount, T>(FirstDim, init);
+        return Tensor<DimCount, T>(firstDim, init);
     }
 }
 
@@ -69,18 +69,18 @@ struct IO {
     std::string scanToken() { return scan<std::string>(); }
 
     template<typename T>
-    std::vector<T> scans(int n) {
-        std::vector<T> arr(n);
-        for (int i = 0; i < n; ++i) {
+    std::vector<T> scans(int n, int leftPadding = 0) {
+        std::vector<T> arr(leftPadding + n);
+        for (int i = leftPadding; i < arr.size(); ++i) {
             arr[i] = scan<T>();
         }
         return arr;
     }
 
-    std::vector<int> scanInts(int n) { return scans<int>(n); }
-    std::vector<Long> scanLongs(int n) { return scans<Long>(n); }
-    std::vector<double> scanDoubles(int n) { return scans<double>(n); }
-    std::vector<std::string> scanTokens(int n) { return scans<std::string>(n); }
+    std::vector<int> scanInts(int n, int leftPadding = 0) { return scans<int>(n, leftPadding); }
+    std::vector<Long> scanLongs(int n, int leftPadding = 0) { return scans<Long>(n, leftPadding); }
+    std::vector<double> scanDoubles(int n, int leftPadding = 0) { return scans<double>(n, leftPadding); }
+    std::vector<std::string> scanTokens(int n, int leftPadding = 0) { return scans<std::string>(n, leftPadding); }
 
     template<typename T, unsigned int N>
     std::array<T, N> scans() {

@@ -86,7 +86,7 @@ struct IO {
     std::array<T, N> scans() {
         std::array<T, N> result;
         for (int i = 0; i < N; ++i) {
-            result[i] = scanInt();
+            result[i] = scan<T>();
         }
         return result;
     }

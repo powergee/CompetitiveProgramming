@@ -12,6 +12,35 @@
 using Long = long long;
 using BigInt = __int128_t;
 
+template<typename T>
+struct IsContainer {
+    typedef typename std::remove_const<T>::type PlainType;
+
+    template<typename A>
+    static constexpr bool test(
+        A * pt,
+        A const * cpt = nullptr,
+        decltype(pt->begin()) * = nullptr,
+        decltype(pt->end()) * = nullptr,
+        decltype(cpt->begin()) * = nullptr,
+        decltype(cpt->end()) * = nullptr,
+        typename A::iterator * pi = nullptr,
+        typename A::const_iterator * pci = nullptr) {
+
+        typedef typename A::iterator iterator;
+        typedef typename A::const_iterator const_iterator;
+        return std::is_same<decltype(pt->begin()), iterator>::value &&
+            std::is_same<decltype(pt->end()), iterator>::value &&
+            std::is_same<decltype(cpt->begin()), const_iterator>::value &&
+            std::is_same<decltype(cpt->end()), const_iterator>::value;
+    }
+
+    template<typename A>
+    static constexpr bool test(...) { return false; }
+
+    static constexpr bool value = test<PlainType>(nullptr);
+};
+
 template <size_t Dim, typename T>
 struct TensorTemp {
     typedef std::vector<typename TensorTemp<Dim-1, T>::type> type;
@@ -35,19 +64,17 @@ Tensor<sizeof...(RestDims)+1, T> createTensor(T init, FirstDim firstDim, RestDim
     }
 }
 
-template<typename T>
-std::ostream& operator<<(std::ostream& os, std::vector<T> const &vec) {
-    for (auto it = vec.begin(); it != vec.end(); ++it) {
-        std::cout << (it == vec.begin() ? "" : " ") << *it;
+template<typename T, typename = std::enable_if_t<IsContainer<T>::value>, typename = std::enable_if_t<!std::is_same<T, std::string>::value>>
+std::ostream& operator<<(std::ostream& os, T const &cont) {
+    for (auto it = cont.begin(); it != cont.end(); ++it) {
+        std::cout << (it == cont.begin() ? "" : " ") << *it;
     }
     return os;
 }
 
-template<typename T>
-std::ostream& operator<<(std::ostream& os, std::set<T> const &vec) {
-    for (auto it = vec.begin(); it != vec.end(); ++it) {
-        std::cout << (it == vec.begin() ? "" : " ") << *it;
-    }
+template<typename... Ts>
+std::ostream& operator<<(std::ostream& os, std::pair<Ts...> const &p) {
+    std::cout << p.first << " " << p.second;
     return os;
 }
 

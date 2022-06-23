@@ -64,12 +64,41 @@ Tensor<sizeof...(RestDims)+1, T> createTensor(T init, FirstDim firstDim, RestDim
     }
 }
 
-template<typename T, typename = std::enable_if_t<IsContainer<T>::value>, typename = std::enable_if_t<!std::is_same<T, std::string>::value>>
-std::ostream& operator<<(std::ostream& os, T const &cont) {
+template<
+    typename T,
+    typename = std::enable_if_t<IsContainer<T>::value>,
+    typename = std::enable_if_t<!std::is_same<T, std::string>::value>>
+std::ostream& operator<<(std::ostream& os, const T &cont) {
     for (auto it = cont.begin(); it != cont.end(); ++it) {
         std::cout << (it == cont.begin() ? "" : " ") << *it;
     }
     return os;
+}
+
+template<
+    typename ContType,
+    typename MapFunc,
+    typename = std::enable_if_t<IsContainer<ContType>::value>,
+    typename ElemType = typename ContType::value_type>
+auto map(const ContType& cont, const MapFunc& func) {
+    typedef decltype(func(*cont.begin())) RetType;
+    std::vector<RetType> result;
+    for (auto v : cont) {
+        result.push_back(func(v));
+    }
+    return result;
+}
+
+template<
+    typename ContType,
+    typename = std::enable_if_t<IsContainer<ContType>::value>,
+    typename ElemType = typename ContType::value_type>
+std::map<ElemType, int> countElements(const ContType& cont) {
+    std::map<ElemType, int> count;
+    for (auto v : cont) {
+        count[v]++;
+    }
+    return count;
 }
 
 template<typename... Ts>
@@ -132,12 +161,12 @@ struct IO {
     }
 
     template<typename T>
-    void print(T value) {
+    void print(const T& value) {
         std::cout << value << " ";
     }
 
     template<typename T, typename... Args>
-    void print(T value, Args... args) {
+    void print(const T& value, Args... args) {
         print(value);
         print(args...);
     }
@@ -147,12 +176,12 @@ struct IO {
     }
 
     template<typename T>
-    void println(T value) {
+    void println(const T& value) {
         std::cout << value << "\n";
     }
 
     template<typename T, typename... Args>
-    void println(T value, Args... args) {
+    void println(const T& value, Args... args) {
         std::cout << value << " ";
         println(args...);
     }

@@ -152,10 +152,20 @@ struct IO {
     template<unsigned int N> std::array<double, N> scanDoubles() { return scans<double, N>(); }
     template<unsigned int N> std::array<std::string, N> scanTokens() { return scans<std::string, N>(); }
 
-    std::vector<std::vector<int>> scanMatrix(int r, int c) {
-        std::vector<std::vector<int>> result(r, std::vector<int>(c));
+    Tensor<2, int> scanMatrix(int r, int c) {
+        Tensor<2, int> result(r, std::vector<int>(c));
         for (int i = 0; i < r; ++i) {
             result[i] = scanInts(c);
+        }
+        return result;
+    }
+
+    Tensor<2, int> scanTree(int n) {
+        Tensor<2, int> result(n+1);
+        for (int i = 0; i < n-1; ++i) {
+            auto [u, v] = scans<int, 2>();
+            result[u].push_back(v);
+            result[v].push_back(u);
         }
         return result;
     }
@@ -210,10 +220,9 @@ struct IO {
             solve();
         }
     }
-};
+} io;
 
 int main() {
-    IO io;
     io.codeforces([&]() {
         
     });

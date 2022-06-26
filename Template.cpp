@@ -113,57 +113,57 @@ struct IO {
     }
 
     template<typename T>
-    T scan() {
+    T next() {
         T result;
         std::cin >> result;
         return result;
     }
 
-    int scanInt() { return scan<int>(); }
-    Long scanLong() { return scan<Long>(); }
-    double scanDouble() { return scan<double>(); }
-    std::string scanToken() { return scan<std::string>(); }
+    int nextInt() { return next<int>(); }
+    Long nextLong() { return next<Long>(); }
+    double nextDouble() { return next<double>(); }
+    std::string nextToken() { return next<std::string>(); }
 
     template<typename T>
-    std::vector<T> scans(int n, int leftPadding = 0) {
+    std::vector<T> nexts(int n, int leftPadding = 0) {
         std::vector<T> arr(leftPadding + n);
         for (int i = leftPadding; i < arr.size(); ++i) {
-            arr[i] = scan<T>();
+            arr[i] = next<T>();
         }
         return arr;
     }
 
-    std::vector<int> scanInts(int n, int leftPadding = 0) { return scans<int>(n, leftPadding); }
-    std::vector<Long> scanLongs(int n, int leftPadding = 0) { return scans<Long>(n, leftPadding); }
-    std::vector<double> scanDoubles(int n, int leftPadding = 0) { return scans<double>(n, leftPadding); }
-    std::vector<std::string> scanTokens(int n, int leftPadding = 0) { return scans<std::string>(n, leftPadding); }
+    std::vector<int> nextInts(int n, int leftPadding = 0) { return nexts<int>(n, leftPadding); }
+    std::vector<Long> nextLongs(int n, int leftPadding = 0) { return nexts<Long>(n, leftPadding); }
+    std::vector<double> nextDoubles(int n, int leftPadding = 0) { return nexts<double>(n, leftPadding); }
+    std::vector<std::string> nextTokens(int n, int leftPadding = 0) { return nexts<std::string>(n, leftPadding); }
 
     template<typename T, unsigned int N>
-    std::array<T, N> scans() {
+    std::array<T, N> nexts() {
         std::array<T, N> result;
         for (int i = 0; i < N; ++i) {
-            result[i] = scan<T>();
+            result[i] = next<T>();
         }
         return result;
     }
 
-    template<unsigned int N> std::array<int, N> scanInts() { return scans<int, N>(); }
-    template<unsigned int N> std::array<Long, N> scanLongs() { return scans<Long, N>(); }
-    template<unsigned int N> std::array<double, N> scanDoubles() { return scans<double, N>(); }
-    template<unsigned int N> std::array<std::string, N> scanTokens() { return scans<std::string, N>(); }
+    template<unsigned int N> std::array<int, N> nextInts() { return nexts<int, N>(); }
+    template<unsigned int N> std::array<Long, N> nextLongs() { return nexts<Long, N>(); }
+    template<unsigned int N> std::array<double, N> nextDoubles() { return nexts<double, N>(); }
+    template<unsigned int N> std::array<std::string, N> nextTokens() { return nexts<std::string, N>(); }
 
-    Tensor<2, int> scanMatrix(int r, int c) {
+    Tensor<2, int> nextMatrix(int r, int c) {
         Tensor<2, int> result(r, std::vector<int>(c));
         for (int i = 0; i < r; ++i) {
-            result[i] = scanInts(c);
+            result[i] = nextInts(c);
         }
         return result;
     }
 
-    Tensor<2, int> scanTree(int n) {
+    Tensor<2, int> nextTree(int n) {
         Tensor<2, int> result(n+1);
         for (int i = 0; i < n-1; ++i) {
-            auto [u, v] = scans<int, 2>();
+            auto [u, v] = nexts<int, 2>();
             result[u].push_back(v);
             result[v].push_back(u);
         }
@@ -207,14 +207,14 @@ struct IO {
     }
 
     void codeforces(std::function<void()> solve) {
-        int T = scanInt();
+        int T = nextInt();
         while (T--) {
             solve();
         }
     }
 
     void google(std::function<void()> solve) {
-        int T = scanInt();
+        int T = nextInt();
         for (int t = 1; t <= T; ++t) {
             std::cout << "Case #" << t << ": ";
             solve();

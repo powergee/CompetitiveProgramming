@@ -226,6 +226,16 @@ struct IO {
             solve();
         }
     }
+
+    void samsung(std::function<void()> solve) {
+        int T = nextInt();
+        for (int t = 1; t <= T; ++t) {
+            std::cout << "Case #" << t << "\n";
+            solve();
+            // For partial scores:
+            std::cout.flush();
+        }
+    }
 } io;
 
 int main() {

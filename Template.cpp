@@ -70,6 +70,31 @@ Tensor<sizeof...(RestDims)+1, T> createTensor(T init, FirstDim firstDim, RestDim
     }
 }
 
+template<typename TensorType, size_t Dim>
+struct TensorElementType {
+	typedef typename TensorElementType<TensorType, Dim-1>::type Inner;
+	typedef typename Inner::value_type type;
+};
+
+template<typename TensorType>
+struct TensorElementType<TensorType, 1> {
+	typedef typename TensorType::value_type type;
+};
+
+template<
+	typename TensorType,
+	typename FirstIdx,
+	typename... RestIdxs,
+	typename T = typename TensorElementType<TensorType, sizeof...(RestIdxs)+1>::type>
+T& getFromTensor(TensorType& tensor, FirstIdx firstIdx, RestIdxs... restIdxs) {
+	constexpr size_t RestCount = sizeof...(restIdxs);
+	if constexpr (RestCount == 0) {
+		return tensor[firstIdx];
+	} else {
+		return getFromTensor(tensor[firstIdx], restIdxs...);
+	}
+}
+
 template<
     typename T,
     typename = std::enable_if_t<IsContainer<T>::value>,
@@ -112,6 +137,42 @@ std::ostream& operator<<(std::ostream& os, std::pair<Ts...> const &p) {
     std::cout << p.first << " " << p.second;
     return os;
 }
+
+template<size_t ParamsCnt, typename = std::make_index_sequence<ParamsCnt>>
+struct DPFuncGen {};
+
+template<size_t ParamsCnt, size_t... S>
+struct DPFuncGen<ParamsCnt, std::index_sequence<S...>> {
+	typedef std::function<std::size_t(decltype(S)...)> type;
+};
+
+template<
+	typename T,
+	typename... DimArgs>
+class Memo {
+private:
+	using FuncType = typename DPFuncGen<sizeof...(DimArgs)>::type;
+	Tensor<sizeof...(DimArgs), T> dp;
+	T undefVal;
+	FuncType naive;
+
+public:
+	Memo(T undefVal, DimArgs... dargs) : undefVal(undefVal) {
+		dp = createTensor(undefVal, dargs...);
+	}
+
+	T operator()(DimArgs... args) {
+		T& result = getFromTensor(dp, args...);
+		if (result != undefVal) {
+			return result;
+		}
+		return result = naive(args...);
+	}
+
+	void operator=(const FuncType& newNaive) {
+		naive = newNaive;
+	}
+};
 
 struct IO {
     IO() {
@@ -166,9 +227,9 @@ struct IO {
         return result;
     }
 
-    Tensor<2, int> nextTree(int n) {
+    Tensor<2, int> nextGraph(int n, int m) {
         Tensor<2, int> result(n+1);
-        for (int i = 0; i < n-1; ++i) {
+        for (int i = 0; i < m; ++i) {
             auto [u, v] = nexts<int, 2>();
             result[u].push_back(v);
             result[v].push_back(u);

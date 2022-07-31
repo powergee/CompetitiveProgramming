@@ -219,10 +219,10 @@ struct IO {
     template<unsigned int N> std::array<double, N> nextDoubles() { return nexts<double, N>(); }
     template<unsigned int N> std::array<std::string, N> nextTokens() { return nexts<std::string, N>(); }
 
-    Tensor<2, int> nextMatrix(int r, int c) {
-        Tensor<2, int> result(r, std::vector<int>(c));
+    Tensor<2, Long> nextMatrix(int r, int c) {
+        Tensor<2, Long> result(r, std::vector<Long>(c));
         for (int i = 0; i < r; ++i) {
-            result[i] = nextInts(c);
+            result[i] = nextLongs(c);
         }
         return result;
     }

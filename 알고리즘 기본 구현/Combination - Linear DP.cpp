@@ -37,6 +37,10 @@ Long getComb(Long n, Long k) {
     return (factorial(n) * getModInverse((factorial(n-k)*factorial(k)) % MOD)) % MOD;
 }
 
+Long getHomoComb(Long n, Long k) {
+    return getComb(n+k-1, n-1);
+}
+
 Long getCatalan(Long n) {
     return (getComb(2*n, n) * getModInverse(n+1)) % MOD;
 }

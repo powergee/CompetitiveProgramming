@@ -1,4 +1,5 @@
 #include <vector>
+#include <numeric>
 
 class DisjointSet {
 private:
@@ -6,9 +7,7 @@ private:
 public:
     DisjointSet(int count) {
         parent.resize(count);
-        for (int i = 0; i < count; ++i) {
-            parent[i] = i;
-        }
+        std::iota(parent.begin(), parent.end(), 0);
     }
 
     int findParent(int x) {
@@ -21,7 +20,6 @@ public:
     void unionNodes(int x, int y) {
         int xPar = findParent(x);
         int yPar = findParent(y);
-
         parent[xPar] = yPar;
     }
 };

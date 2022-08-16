@@ -8,12 +8,16 @@
 #include <queue>
 #include <map>
 #include <set>
+
+#define GCC_COMPILER (defined(__GNUC__) && !defined(__clang__))
+#if GCC_COMPILER
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
 using namespace __gnu_pbds;
 
 template<typename T>
 using OrderedSet = tree<T, null_type, std::less<T>, rb_tree_tag, tree_order_statistics_node_update>;
+#endif
 
 using Long = long long;
 using BigInt = __int128_t;

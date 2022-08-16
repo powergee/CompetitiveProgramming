@@ -9,8 +9,7 @@
 #include <map>
 #include <set>
 
-#define GCC_COMPILER (defined(__GNUC__) && !defined(__clang__))
-#if GCC_COMPILER
+#if defined(__GNUC__) && !defined(__clang__)
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
 using namespace __gnu_pbds;

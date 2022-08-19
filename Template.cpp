@@ -9,7 +9,7 @@
 #include <map>
 #include <set>
 
-#if defined(__GNUC__) && !defined(__clang__)
+#if __has_include(<ext/pb_ds/assoc_container.hpp>) && __has_include(<ext/pb_ds/tree_policy.hpp>)
 #include <ext/pb_ds/assoc_container.hpp>
 #include <ext/pb_ds/tree_policy.hpp>
 using namespace __gnu_pbds;

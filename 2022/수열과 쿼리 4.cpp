@@ -3,14 +3,17 @@
 #include <algorithm>
 #include <cmath>
 #include <deque>
+#include <cassert>
 
 int main() {
     std::cin.tie(nullptr)->sync_with_stdio(false);
     int n, k;
     std::cin >> n >> k;
     std::vector<int> arr(n+1, 0);
+    std::vector<std::vector<int>> pos(k+1);
     for (int i = 1; i <= n; ++i) {
         std::cin >> arr[i];
+        pos[arr[i]].push_back(i);
     }
     int SQRT = int(std::sqrt(n))+1;
 
@@ -43,49 +46,47 @@ int main() {
         countPerGroup[val/SQRT] += cnt;
     };
 
-    std::vector<std::deque<int>> bucket(k+1);
-    std::pair<int, int> curr = { 0, 0 };
-    bucket[arr[0]].push_back(0);
-    addCount(0, 1);
+    std::vector<std::pair<int, int>> bucket(k+1, {0, -1});
+    std::pair<int, int> curr = { 1, 0 };
     std::vector<int> answer(q, -1);
 
     for (auto [ql, qr, qi] : queries) {
         // expand first
         while (curr.second < qr) {
             curr.second++;
-            auto& target = bucket[arr[curr.second]];
-            if (target.size()) {
-                addCount(target.back() - target.front(), -1);
+            int val = arr[curr.second];
+            auto& [bl, br] = bucket[val];
+            if (bl <= br) {
+                addCount(pos[val][br] - pos[val][bl], -1);
             }
-            target.push_back(curr.second);
-            addCount(target.back() - target.front(), 1);
+            addCount(pos[val][++br] - pos[val][bl], 1);
         }
         while (ql < curr.first) {
             curr.first--;
-            auto& target = bucket[arr[curr.first]];
-            if (target.size()) {
-                addCount(target.back() - target.front(), -1);
+            int val = arr[curr.first];
+            auto& [bl, br] = bucket[val];
+            if (bl <= br) {
+                addCount(pos[val][br] - pos[val][bl], -1);
             }
-            target.push_front(curr.first);
-            addCount(target.back() - target.front(), 1);
+            addCount(pos[val][br] - pos[val][--bl], 1);
         }
 
         // shrink later
         while (qr < curr.second) {
-            auto& prevBuck = bucket[arr[curr.second]];
-            addCount(prevBuck.back() - prevBuck.front(), -1);
-            prevBuck.pop_back();
-            if (prevBuck.size()) {
-                addCount(prevBuck.back() - prevBuck.front(), 1);
+            int val = arr[curr.second];
+            auto& [bl, br] = bucket[val];
+            addCount(pos[val][br] - pos[val][bl], -1);
+            if (bl <= --br) {
+                addCount(pos[val][br] - pos[val][bl], 1);
             }
             curr.second--;
         }
         while (curr.first < ql) {
-            auto& prevBuck = bucket[arr[curr.first]];
-            addCount(prevBuck.back() - prevBuck.front(), -1);
-            prevBuck.pop_front();
-            if (prevBuck.size()) {
-                addCount(prevBuck.back() - prevBuck.front(), 1);
+            int val = arr[curr.first];
+            auto& [bl, br] = bucket[val];
+            addCount(pos[val][br] - pos[val][bl], -1);
+            if (++bl <= br) {
+                addCount(pos[val][br] - pos[val][bl], 1);
             }
             curr.first++;
         }

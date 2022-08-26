@@ -270,12 +270,6 @@ struct IO {
         println(yes ? "Yes" : "No");
     }
 
-    void untilEOF(std::function<void()> solve) {
-        while (std::cin.eof() != false) {
-            solve();
-        }
-    }
-
     void codeforces(std::function<void()> solve) {
         int T = nextInt();
         while (T--) {

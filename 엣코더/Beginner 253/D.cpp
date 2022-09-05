@@ -298,9 +298,14 @@ struct IO {
 } io;
 
 int main() {
-    io.codeforces([&]() {
-        
-    });
+    auto [n, a, b] = io.nexts<Long, 3>();
+    
+    auto getSumOfMultiples = [](Long max, Long mult) -> Long {
+        Long count = max / mult;
+        return ((count * (count+1)) / 2) * mult;
+    };
+
+    io.println(getSumOfMultiples(n, 1) - getSumOfMultiples(n, a) - getSumOfMultiples(n, b) + getSumOfMultiples(n, std::lcm(a, b)));
     
     return 0;
 }

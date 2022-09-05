@@ -298,9 +298,39 @@ struct IO {
 } io;
 
 int main() {
-    io.codeforces([&]() {
-        
-    });
+    const Long MOD = 998244353;
+    auto [n, m, k] = io.nexts<int, 3>();
+
+    Tensor<2, Long> dp = createTensor(0LL, n, m+1);
+    std::vector<Long> nextSum (m+1, 0);
+    for (int v = 1; v <= m; ++v) {
+        dp[n-1][v] = 1;
+        nextSum[v] = (nextSum[v-1] + dp[n-1][v]) % MOD;
+    }
+    
+    for (int i = n-2; i >= 0; --i) {
+        for (int v = 1; v <= m; ++v) {
+            if (k == 0) {
+                dp[i][v] = nextSum.back();
+            } else {
+                dp[i][v] += (nextSum.back() - nextSum[std::min(v+k-1, m)] + MOD) % MOD;
+                dp[i][v] += nextSum[std::max(v-k, 0)];
+                dp[i][v] %= MOD;
+            }
+        }
+        for (int v = 1; v <= m; ++v) {
+            nextSum[v] = (nextSum[v-1] + dp[i][v]) % MOD;
+            assert(0 <= nextSum[v] && nextSum[v] < MOD);
+        }
+    }
+
+    Long answer = 0;
+    for (int v = 1; v <= m; ++v) {
+        assert(dp[0][v] < MOD);
+        answer += dp[0][v];
+        answer %= MOD;
+    }
+    io.println(answer);
     
     return 0;
 }

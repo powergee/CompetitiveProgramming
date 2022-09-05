@@ -298,9 +298,85 @@ struct IO {
 } io;
 
 int main() {
-    io.codeforces([&]() {
-        
-    });
+    auto [n, m, q] = io.nexts<int, 3>();
+    
+    using Query = std::tuple<int, int, int, int>;
+    std::vector<Query> queries;
+    queries.reserve(q);
+    for (int i = 0; i < q; ++i) {
+        int op = io.nextInt();
+        if (op == 1) {
+            auto [l, r, x] = io.nexts<int, 3>();
+            queries.emplace_back(1, l-1, r-1, x);
+        } else if (op == 2) {
+            auto [i, x] = io.nexts<int, 2>();
+            queries.emplace_back(2, i-1, x, 0);
+        } else {
+            auto [i, j] = io.nexts<int, 2>();
+            queries.emplace_back(3, i-1, j-1, 0);
+        }
+    }
+
+    const int SQRT = int(std::sqrt(q)) + 1;
+    Tensor<2, Long> block = createTensor(0LL, q/SQRT+1, m+1);
+    
+    for (int i = 0; i < q; ++i) {
+        auto [op, l, r, x] = queries[i];
+        if (op == 1) {
+            block[i/SQRT][l] += x;
+            block[i/SQRT][r+1] += -x;
+        }
+    }
+
+    for (int i = 0; i < (int)block.size(); ++i) {
+        for (int j = 1; j <= m; ++j) {
+            block[i][j] += block[i][j-1];
+        }
+    }
+
+    auto getSumNaively = [&](int l, int r, int col) -> Long {
+        Long result = 0;
+        for (int qi = l; qi <= r; ++qi) {
+            auto [op, ql, qr, qx] = queries[qi];
+            if (op == 1 && ql <= col && col <= qr) {
+                result += qx;
+            }
+        }
+        return result;
+    };
+    
+    auto getSumOf = [&](int l, int r, int col) -> Long {
+        int gl = l/SQRT;
+        int gr = r/SQRT;
+        if (gl == gr) {
+            return getSumNaively(l, r, col);
+        }
+        Long result = getSumNaively(l, (gl+1)*SQRT-1, col) + getSumNaively(gr*SQRT, r, col);
+        for (int g = gl+1; g < gr; ++g) {
+            result += block[g][col];
+        }
+        return result;
+    };
+
+    std::vector<int> lastReplace(n, -1);
+    for (int qi = 0; qi < q; ++qi) {
+        auto [op, a1, a2, a3] = queries[qi];
+
+        if (op == 1) {
+            continue;
+        } else if (op == 2) {
+            lastReplace[a1] = qi;
+        } else {
+            int left = 0, right = qi;
+            Long base = 0;
+            if (lastReplace[a1] != -1) {
+                left = lastReplace[a1]+1;
+                base = std::get<2>(queries[lastReplace[a1]]);
+            }
+
+            io.println(base + getSumOf(left, right, a2));
+        }
+    }
     
     return 0;
 }

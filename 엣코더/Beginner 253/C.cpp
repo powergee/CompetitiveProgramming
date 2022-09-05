@@ -298,9 +298,26 @@ struct IO {
 } io;
 
 int main() {
-    io.codeforces([&]() {
-        
-    });
+    std::multiset<int> s;
+    auto q = io.nextInt();
+    while (q--) {
+        int op = io.nextInt();
+        if (op == 1) {
+            int x = io.nextInt();
+            s.insert(x);
+        } else if (op == 2) {
+            auto [x, c] = io.nexts<int, 2>();
+            for (int i = 0; i < c; ++i) {
+                auto it = s.find(x);
+                if (it == s.end()) {
+                    break;
+                }
+                s.erase(it);
+            }
+        } else {
+            io.println(*s.rbegin() - *s.begin());
+        }
+    }
     
     return 0;
 }

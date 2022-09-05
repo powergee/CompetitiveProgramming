@@ -298,9 +298,20 @@ struct IO {
 } io;
 
 int main() {
-    io.codeforces([&]() {
-        
-    });
+    auto [n, m] = io.nexts<size_t, 2>();
+    auto map = io.nextTokens(n);
+
+    std::vector<std::pair<int, int>> points;
+
+    for (size_t i = 0; i < n; ++i) {
+        for (size_t j = 0; j < m; ++j) {
+            if (map[i][j] == 'o') {
+                points.emplace_back(int(i), int(j));
+            }
+        }
+    }
+
+    io.println(std::abs(points[0].first-points[1].first) + std::abs(points[0].second-points[1].second));
     
     return 0;
 }

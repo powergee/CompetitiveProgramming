@@ -298,9 +298,10 @@ struct IO {
 } io;
 
 int main() {
-    io.codeforces([&]() {
-        
-    });
+    auto arr = io.nextInts(3);
+    int b = arr[1];
+    std::sort(arr.begin(), arr.end());
+    io.printYes(arr[1] == b);
     
     return 0;
 }

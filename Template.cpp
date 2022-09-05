@@ -33,8 +33,8 @@ struct IsContainer {
         decltype(pt->end()) * = nullptr,
         decltype(cpt->begin()) * = nullptr,
         decltype(cpt->end()) * = nullptr,
-        typename A::iterator * pi = nullptr,
-        typename A::const_iterator * pci = nullptr) {
+        typename A::iterator * = nullptr,
+        typename A::const_iterator * = nullptr) {
 
         typedef typename A::iterator iterator;
         typedef typename A::const_iterator const_iterator;
@@ -180,6 +180,7 @@ public:
 struct IO {
     IO() {
         std::cin.tie(nullptr)->sync_with_stdio(false);
+        std::cout.precision(std::numeric_limits<double>::digits10);
     }
 
     template<typename T>
@@ -189,51 +190,47 @@ struct IO {
         return result;
     }
 
+    size_t nextSize() { return next<size_t>(); }
     int nextInt() { return next<int>(); }
     Long nextLong() { return next<Long>(); }
     double nextDouble() { return next<double>(); }
     std::string nextToken() { return next<std::string>(); }
 
     template<typename T>
-    std::vector<T> nexts(int n, int leftPadding = 0) {
+    std::vector<T> nexts(size_t n, size_t leftPadding = 0) {
         std::vector<T> arr(leftPadding + n);
-        for (int i = leftPadding; i < arr.size(); ++i) {
+        for (auto i = leftPadding; i < arr.size(); ++i) {
             arr[i] = next<T>();
         }
         return arr;
     }
 
-    std::vector<int> nextInts(int n, int leftPadding = 0) { return nexts<int>(n, leftPadding); }
-    std::vector<Long> nextLongs(int n, int leftPadding = 0) { return nexts<Long>(n, leftPadding); }
-    std::vector<double> nextDoubles(int n, int leftPadding = 0) { return nexts<double>(n, leftPadding); }
-    std::vector<std::string> nextTokens(int n, int leftPadding = 0) { return nexts<std::string>(n, leftPadding); }
+    std::vector<int> nextInts(size_t n, size_t leftPadding = 0) { return nexts<int>(n, leftPadding); }
+    std::vector<Long> nextLongs(size_t n, size_t leftPadding = 0) { return nexts<Long>(n, leftPadding); }
+    std::vector<double> nextDoubles(size_t n, size_t leftPadding = 0) { return nexts<double>(n, leftPadding); }
+    std::vector<std::string> nextTokens(size_t n, size_t leftPadding = 0) { return nexts<std::string>(n, leftPadding); }
 
-    template<typename T, unsigned int N>
+    template<typename T, size_t N>
     std::array<T, N> nexts() {
         std::array<T, N> result;
-        for (int i = 0; i < N; ++i) {
-            result[i] = next<T>();
+        for (auto& val : result) {
+            val = next<T>();
         }
         return result;
     }
 
-    template<unsigned int N> std::array<int, N> nextInts() { return nexts<int, N>(); }
-    template<unsigned int N> std::array<Long, N> nextLongs() { return nexts<Long, N>(); }
-    template<unsigned int N> std::array<double, N> nextDoubles() { return nexts<double, N>(); }
-    template<unsigned int N> std::array<std::string, N> nextTokens() { return nexts<std::string, N>(); }
-
-    Tensor<2, Long> nextMatrix(int r, int c) {
+    Tensor<2, Long> nextMatrix(size_t r, size_t c) {
         Tensor<2, Long> result(r, std::vector<Long>(c));
-        for (int i = 0; i < r; ++i) {
+        for (size_t i = 0; i < r; ++i) {
             result[i] = nextLongs(c);
         }
         return result;
     }
 
-    Tensor<2, int> nextGraph(int n, int m) {
-        Tensor<2, int> result(n+1);
-        for (int i = 0; i < m; ++i) {
-            auto [u, v] = nexts<int, 2>();
+    Tensor<2, size_t> nextGraph(size_t n, size_t m) {
+        Tensor<2, size_t> result(n+1);
+        for (size_t i = 0; i < m; ++i) {
+            auto [u, v] = nexts<size_t, 2>();
             result[u].push_back(v);
             result[v].push_back(u);
         }
@@ -266,8 +263,12 @@ struct IO {
         println(args...);
     }
 
-    void printYes(bool yes) {
-        println(yes ? "Yes" : "No");
+    void printYes(bool yes, bool bold = false) {
+        if (bold) {
+            println(yes ? "YES" : "NO");
+        } else {
+            println(yes ? "Yes" : "No");
+        }
     }
 
     void codeforces(std::function<void()> solve) {

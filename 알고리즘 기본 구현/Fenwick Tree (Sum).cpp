@@ -7,6 +7,7 @@ class FenwickTree {
 private:
     std::vector<T> tree;
 
+public:
     T query(int end) {
         T result = 0;
         while (end > 0) {
@@ -16,29 +17,24 @@ private:
         return result;
     }
 
-public:
-    // Note: pos must be 0-indexed.
     void update(int pos, T add) {
-        pos++;
-        while (pos < tree.size()) {
+        while (pos < int(tree.size())) {
             tree[pos] += add;
             pos += (pos & -pos);
         }
     }
 
-    // Note: start and end must be 0-indexed.
     T query(int start, int end) {
-        return query(end+1) - query(start);
+        return query(end) - query(start-1);
     }
 
     FenwickTree(int count) {
         tree.resize(count+1, 0);
     }
 
-    // Note: original must be 0-indexed.
     FenwickTree(const std::vector<T>& original) : FenwickTree(original.size()) {
-        for (int i = 0; i < original.size(); ++i) {
-            update(i, original[i]);
+        for (int i = 0; i < int(original.size()); ++i) {
+            update(i+1, original[i]);
         }
     }
 };

@@ -28,21 +28,9 @@ struct IsContainer {
     template<typename A>
     static constexpr bool test(
         A * pt,
-        A const * cpt = nullptr,
         decltype(pt->begin()) * = nullptr,
-        decltype(pt->end()) * = nullptr,
-        decltype(cpt->begin()) * = nullptr,
-        decltype(cpt->end()) * = nullptr,
-        typename A::iterator * = nullptr,
-        typename A::const_iterator * = nullptr) {
-
-        typedef typename A::iterator iterator;
-        typedef typename A::const_iterator const_iterator;
-        return std::is_same<decltype(pt->begin()), iterator>::value &&
-            std::is_same<decltype(pt->end()), iterator>::value &&
-            std::is_same<decltype(cpt->begin()), const_iterator>::value &&
-            std::is_same<decltype(cpt->end()), const_iterator>::value;
-    }
+        decltype(pt->end()) * = nullptr
+    ) { return true; }
 
     template<typename A>
     static constexpr bool test(...) { return false; }

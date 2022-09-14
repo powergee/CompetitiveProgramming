@@ -1,0 +1,88 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "Compile C/C++",
+            "command": "/usr/bin/g++",
+            "args": [
+                "-std=c++20",
+                "-Wall",
+                "-Wextra",
+                "-DLOCAL_JUDGE",
+                "-g",
+                "${file}",
+                "-o",
+                "${fileDirname}/${fileBasenameNoExtension}.exe"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": "build"
+        },
+        {
+            "type": "shell",
+            "label": "Execute exe",
+            "command": "\"${fileDirname}/${fileBasenameNoExtension}.exe\" > out.txt && cat out.txt",
+            "group": "test"
+        },
+        {
+            "type": "shell",
+            "label": "Execute Rust",
+            "command": "cargo",
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "args": [
+                "run"
+            ],
+            "problemMatcher": [
+                "$rustc"
+            ],
+            "group": "test"
+        },
+        {
+            "type": "shell",
+            "label": "Execute dotnet",
+            "command": "dotnet",
+            "options": {
+                "cwd": "${fileDirname}"
+            },
+            "args": [
+                "run"
+            ],
+            "group": "test"
+        },
+        {
+            "type": "shell",
+            "label": "Execute py",
+            "command": "python3",
+            "args": [
+                "${file}"
+            ],
+            "group": "test"
+        },
+        {
+            "type": "shell",
+            "label": "Execute go",
+            "command": "go",
+            "args": [
+                "run",
+                "${file}"
+            ],
+            "group": "test"
+        },
+        {
+            "type": "shell",
+            "label": "Execute js",
+            "command": "node",
+            "args": [
+                "${file}"
+            ],
+            "group": "test"
+        },
+    ]
+}

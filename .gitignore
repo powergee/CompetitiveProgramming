@@ -1,7 +1,6 @@
 *.exe
 *.out
 Test/
-.vscode/
 *.cache
 out*
 
@@ -11,9 +10,6 @@ project.lock.json
 .DS_Store
 *.pyc
 nupkg/
-
-# Visual Studio Code
-.vscode
 
 # Rider
 .idea

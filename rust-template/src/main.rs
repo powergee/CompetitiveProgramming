@@ -7,6 +7,7 @@ fn main() {
 struct Scanner {
     buffer: Vec<String>
 }
+
 impl Scanner {
     fn next<T: std::str::FromStr>(&mut self) -> T {
         loop {
@@ -19,3 +20,19 @@ impl Scanner {
         }
     }
 }
+
+macro_rules! scanner_shortcut {
+    ($scan_type:ident) => {
+        impl Scanner {
+            fn $scan_type(&mut self) -> $scan_type {
+                self.next()
+            }
+        }
+    };
+}
+scanner_shortcut!(i32);
+scanner_shortcut!(i64);
+scanner_shortcut!(isize);
+scanner_shortcut!(u32);
+scanner_shortcut!(u64);
+scanner_shortcut!(usize);

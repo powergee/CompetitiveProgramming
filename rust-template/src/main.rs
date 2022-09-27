@@ -1,4 +1,5 @@
 fn main() {
+    #[allow(unused)]
     let scan = &mut Scanner::default();
     
 }
@@ -22,17 +23,24 @@ impl Scanner {
 }
 
 macro_rules! scanner_shortcut {
-    ($scan_type:ident) => {
+    ($scan_type:ident, $single_scan_ident:ident, $multi_scan_ident:ident) => {
         impl Scanner {
-            fn $scan_type(&mut self) -> $scan_type {
+            #[allow(unused)]
+            fn $single_scan_ident(&mut self) -> $scan_type {
                 self.next()
+            }
+            #[allow(unused)]
+            fn $multi_scan_ident(&mut self, n: usize) -> Vec<$scan_type> {
+                (0..n).map(|_| self.next()).collect()
             }
         }
     };
 }
-scanner_shortcut!(i32);
-scanner_shortcut!(i64);
-scanner_shortcut!(isize);
-scanner_shortcut!(u32);
-scanner_shortcut!(u64);
-scanner_shortcut!(usize);
+scanner_shortcut!(i32, i32, i32s);
+scanner_shortcut!(i64, i64, i64s);
+scanner_shortcut!(isize, isize, isizes);
+scanner_shortcut!(u32, u32, u32s);
+scanner_shortcut!(u64, u64, u64s);
+scanner_shortcut!(usize, usize, usizes);
+scanner_shortcut!(f64, f64, f64s);
+scanner_shortcut!(String, string, strings);

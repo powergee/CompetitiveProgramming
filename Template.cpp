@@ -8,6 +8,7 @@
 #include <queue>
 #include <map>
 #include <set>
+#include <cassert>
 
 #if __has_include(<ext/pb_ds/assoc_container.hpp>) && __has_include(<ext/pb_ds/tree_policy.hpp>)
 #include <ext/pb_ds/assoc_container.hpp>

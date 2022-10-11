@@ -1,30 +1,43 @@
+use std::io::BufRead;
+
 fn main() {
+    let stdin = std::io::stdin();
     #[allow(unused)]
-    let scan = &mut Scanner::default();
-    
+    let scan = &mut Scanner::new(stdin.lock());
 }
 
-#[derive(Default)]
-struct Scanner {
-    buffer: Vec<String>
+// From EbTech
+pub struct Scanner<B> {
+    reader: B,
+    buf_str: String,
+    buf_iter: std::str::SplitWhitespace<'static>,
 }
 
-impl Scanner {
-    fn next<T: std::str::FromStr>(&mut self) -> T {
+impl<B: BufRead> Scanner<B> {
+    pub fn new(reader: B) -> Self {
+        Self {
+            reader,
+            buf_str: String::new(),
+            buf_iter: "".split_whitespace()
+        }
+    }
+
+    pub fn next<T: std::str::FromStr>(&mut self) -> T {
         loop {
-            if let Some(token) = self.buffer.pop() {
+            if let Some(token) = self.buf_iter.next() {
                 return token.parse().ok().expect("Failed parse");
             }
-            let mut input = String::new();
-            std::io::stdin().read_line(&mut input).expect("Failed read");
-            self.buffer = input.split_whitespace().rev().map(String::from).collect();
+            self.buf_str.clear();
+            self.reader.read_line(&mut self.buf_str).expect("Failed read");
+            self.buf_iter = unsafe { std::mem::transmute(self.buf_str.split_whitespace()) };
         }
     }
 }
 
+
 macro_rules! scanner_shortcut {
     ($scan_type:ident, $single_scan_ident:ident, $multi_scan_ident:ident) => {
-        impl Scanner {
+        impl<B: BufRead> Scanner<B> {
             #[allow(unused)]
             fn $single_scan_ident(&mut self) -> $scan_type {
                 self.next()

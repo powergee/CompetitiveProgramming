@@ -1,22 +1,25 @@
-use std::io::BufRead;
+#![allow(unused)]
+use std::io::{BufRead, BufWriter, Write};
 
 fn main() {
     let stdin = std::io::stdin();
-    #[allow(unused)]
-    let scan = &mut Scanner::new(stdin.lock());
+    let stdout = std::io::stdout();
+    let io = &mut IO::new(stdin.lock(), stdout.lock());
 }
 
-// From EbTech
-pub struct Scanner<B> {
-    reader: B,
+// Modified EbTech's Scanner
+pub struct IO<R, W: Write> {
+    reader: R,
+    writer: BufWriter<W>,
     buf_str: String,
     buf_iter: std::str::SplitWhitespace<'static>,
 }
 
-impl<B: BufRead> Scanner<B> {
-    pub fn new(reader: B) -> Self {
+impl<R: BufRead, W: Write> IO<R, W> {
+    pub fn new(reader: R, writer: W) -> Self {
         Self {
             reader,
+            writer: BufWriter::new(writer),
             buf_str: String::new(),
             buf_iter: "".split_whitespace()
         }
@@ -34,26 +37,22 @@ impl<B: BufRead> Scanner<B> {
     }
 }
 
-
-macro_rules! scanner_shortcut {
-    ($scan_type:ident, $single_scan_ident:ident, $multi_scan_ident:ident) => {
-        impl<B: BufRead> Scanner<B> {
+macro_rules! io_shortcut {
+    ($scan_type:ident, $single_ident:ident, $multi_ident:ident) => {
+        impl<R: BufRead, W: Write> IO<R, W> {
             #[allow(unused)]
-            fn $single_scan_ident(&mut self) -> $scan_type {
+            fn $single_ident(&mut self) -> $scan_type {
                 self.next()
             }
             #[allow(unused)]
-            fn $multi_scan_ident(&mut self, n: usize) -> Vec<$scan_type> {
+            fn $multi_ident(&mut self, n: usize) -> Vec<$scan_type> {
                 (0..n).map(|_| self.next()).collect()
             }
         }
     };
 }
-scanner_shortcut!(i32, i32, i32s);
-scanner_shortcut!(i64, i64, i64s);
-scanner_shortcut!(isize, isize, isizes);
-scanner_shortcut!(u32, u32, u32s);
-scanner_shortcut!(u64, u64, u64s);
-scanner_shortcut!(usize, usize, usizes);
-scanner_shortcut!(f64, f64, f64s);
-scanner_shortcut!(String, string, strings);
+io_shortcut!(i64, i64, i64s);
+io_shortcut!(u64, u64, u64s);
+io_shortcut!(usize, usize, usizes);
+io_shortcut!(f64, f64, f64s);
+io_shortcut!(String, string, strings);

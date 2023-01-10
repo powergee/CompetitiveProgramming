@@ -21,7 +21,7 @@ impl<R: BufRead, W: Write> IO<R, W> {
             reader,
             writer: BufWriter::new(writer),
             buf_str: String::new(),
-            buf_iter: "".split_whitespace()
+            buf_iter: "".split_whitespace(),
         }
     }
 
@@ -31,7 +31,9 @@ impl<R: BufRead, W: Write> IO<R, W> {
                 return token.parse().ok().expect("Failed parse");
             }
             self.buf_str.clear();
-            self.reader.read_line(&mut self.buf_str).expect("Failed read");
+            self.reader
+                .read_line(&mut self.buf_str)
+                .expect("Failed read");
             self.buf_iter = unsafe { std::mem::transmute(self.buf_str.split_whitespace()) };
         }
     }

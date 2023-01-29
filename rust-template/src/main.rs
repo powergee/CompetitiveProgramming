@@ -25,6 +25,7 @@ impl<R: BufRead, W: Write> IO<R, W> {
         }
     }
 
+    #[inline]
     pub fn next<T: std::str::FromStr>(&mut self) -> T {
         loop {
             if let Some(token) = self.buf_iter.next() {
@@ -42,10 +43,12 @@ impl<R: BufRead, W: Write> IO<R, W> {
 macro_rules! io_shortcut {
     ($scan_type:ident, $single_ident:ident, $multi_ident:ident) => {
         impl<R: BufRead, W: Write> IO<R, W> {
+            #[inline]
             #[allow(unused)]
             fn $single_ident(&mut self) -> $scan_type {
                 self.next()
             }
+            #[inline]
             #[allow(unused)]
             fn $multi_ident(&mut self, n: usize) -> Vec<$scan_type> {
                 (0..n).map(|_| self.next()).collect()

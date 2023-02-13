@@ -42,8 +42,10 @@ class Calculator:
             t = self.factor()
             if op == '*':
                 mult *= t
-            else:
+            elif t != 0 and mult % t == 0:
                 mult //= t
+            else:
+                raise ParseError()
         return mult
 
     # Factor -> Number | ( Expression )

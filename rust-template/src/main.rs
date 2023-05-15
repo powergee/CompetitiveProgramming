@@ -1,10 +1,8 @@
 #![allow(unused)]
-use std::io::{BufRead, BufWriter, Write};
+use std::io::{stdin, stdout, BufRead, BufWriter, StdinLock, StdoutLock, Write};
 
 fn main() {
-    let stdin = std::io::stdin();
-    let stdout = std::io::stdout();
-    let io = &mut IO::new(stdin.lock(), stdout.lock());
+    let mut io = IO::stdio();
 }
 
 // Modified EbTech's Scanner
@@ -13,6 +11,12 @@ pub struct IO<R, W: Write> {
     writer: BufWriter<W>,
     buf_str: String,
     buf_iter: std::str::SplitWhitespace<'static>,
+}
+
+impl IO<StdinLock<'static>, StdoutLock<'static>> {
+    pub fn stdio() -> Self {
+        Self::new(stdin().lock(), stdout().lock())
+    }
 }
 
 impl<R: BufRead, W: Write> IO<R, W> {
@@ -56,8 +60,4 @@ macro_rules! io_shortcut {
         }
     };
 }
-io_shortcut!(i64, i64, i64s);
-io_shortcut!(u64, u64, u64s);
 io_shortcut!(usize, usize, usizes);
-io_shortcut!(f64, f64, f64s);
-io_shortcut!(String, string, strings);

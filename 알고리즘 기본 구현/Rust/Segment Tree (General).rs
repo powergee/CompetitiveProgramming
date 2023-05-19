@@ -1,20 +1,20 @@
 use std::ops::{Add, AddAssign, Sub};
 
-pub struct SegTree<'g, T, F>
+pub struct SegTree<T, F>
 where
     F: Fn(T, T) -> T,
 {
     origin_count: usize,
     tree: Vec<T>,
-    reduce: &'g F,
+    reduce: F,
 }
 
-impl<'g, T, F> SegTree<'g, T, F>
+impl<T, F> SegTree<T, F>
 where
     T: Add + AddAssign + Sub<Output = T> + PartialOrd + Copy + Default,
     F: Fn(T, T) -> T,
 {
-    pub fn new(origin_count: usize, reduce: &'g F) -> Self {
+    pub fn new(origin_count: usize, reduce: F) -> Self {
         let tree_height = (origin_count as f64).log2().ceil() as usize;
         let vec_size = 1 << (tree_height + 1);
         Self {
@@ -24,17 +24,17 @@ where
         }
     }
 
-    pub fn from(origin: &Vec<T>, reduce: &'g F) -> Self {
+    pub fn from(origin: &Vec<T>, reduce: F) -> Self {
         let mut result = Self::new(origin.len(), reduce);
         result.initialize(1, 0, result.origin_count - 1, origin);
         result
     }
 
-    pub fn update<'l, G>(&mut self, pos: usize, updater: &'l G)
+    pub fn update<G>(&mut self, pos: usize, updater: G)
     where
         G: Fn(&mut T),
     {
-        self.update_inner(1, pos, 0, self.origin_count - 1, updater)
+        self.update_inner(1, pos, 0, self.origin_count - 1, &updater)
     }
 
     pub fn query(&self, start: usize, end: usize) -> T {
@@ -82,13 +82,13 @@ where
         }
     }
 
-    fn update_inner<'l, G>(
+    fn update_inner<G>(
         &mut self,
         index: usize,
         req_pos: usize,
         tree_start: usize,
         tree_end: usize,
-        updater: &'l G,
+        updater: &G,
     ) where
         G: Fn(&mut T),
     {

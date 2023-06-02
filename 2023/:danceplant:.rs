@@ -1,9 +1,17 @@
 use std::io::{stdin, stdout, BufRead, BufWriter, StdinLock, StdoutLock, Write};
 
+static mut MAP: [[i64; 3000]; 3000] = [[0; 3000]; 3000];
+
 fn main() {
     let mut io = IO::stdio();
     let n = io.usize();
-    let map = (0..n).map(|_| io.i64s(n)).collect::<Vec<_>>();
+
+    let map = unsafe { &mut MAP };
+    for r in 0..n {
+        for c in 0..n {
+            map[r][c] = io.next();
+        }
+    }
 
     let mut left = n / 2 - 1;
     let mut right = n / 2;
@@ -14,7 +22,7 @@ fn main() {
 
     let mut top_sum = if 0 < top {
         let mut sum = 0;
-        for c in left..=right {
+        for c in left..right + 1 {
             sum += map[top - 1][c];
         }
         sum
@@ -23,7 +31,7 @@ fn main() {
     };
     let mut bottom_sum = if bottom + 1 < n {
         let mut sum = 0;
-        for c in left..=right {
+        for c in left..right + 1 {
             sum += map[bottom + 1][c];
         }
         sum
@@ -32,7 +40,7 @@ fn main() {
     };
     let mut left_sum = if 0 < left {
         let mut sum = 0;
-        for r in top..=bottom {
+        for r in top..bottom + 1 {
             sum += map[r][left - 1];
         }
         sum
@@ -41,7 +49,7 @@ fn main() {
     };
     let mut right_sum = if right + 1 < n {
         let mut sum = 0;
-        for r in top..=bottom {
+        for r in top..bottom + 1 {
             sum += map[r][right + 1];
         }
         sum
@@ -64,7 +72,7 @@ fn main() {
                 path.push_str("U");
                 top_sum = if 0 < top {
                     let mut sum = 0;
-                    for c in left..=right {
+                    for c in left..right + 1 {
                         sum += map[top - 1][c];
                     }
                     sum
@@ -83,7 +91,7 @@ fn main() {
                 path.push_str("D");
                 bottom_sum = if bottom + 1 < n {
                     let mut sum = 0;
-                    for c in left..=right {
+                    for c in left..right + 1 {
                         sum += map[bottom + 1][c];
                     }
                     sum
@@ -102,7 +110,7 @@ fn main() {
                 path.push_str("L");
                 left_sum = if 0 < left {
                     let mut sum = 0;
-                    for r in top..=bottom {
+                    for r in top..bottom + 1 {
                         sum += map[r][left - 1];
                     }
                     sum
@@ -121,7 +129,7 @@ fn main() {
                 path.push_str("R");
                 right_sum = if right + 1 < n {
                     let mut sum = 0;
-                    for r in top..=bottom {
+                    for r in top..bottom + 1 {
                         sum += map[r][right + 1];
                     }
                     sum
@@ -198,4 +206,3 @@ macro_rules! io_shortcut {
     };
 }
 io_shortcut!(usize, usize, usizes);
-io_shortcut!(i64, i64, i64s);

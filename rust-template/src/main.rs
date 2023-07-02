@@ -5,7 +5,7 @@ fn main() {
     let mut io = IO::stdio();
 }
 
-// Modified EbTech's Scanner
+/// Modified EbTech's Scanner
 pub struct IO<R, W: Write> {
     reader: R,
     writer: BufWriter<W>,
@@ -44,20 +44,27 @@ impl<R: BufRead, W: Write> IO<R, W> {
     }
 }
 
-macro_rules! io_shortcut {
-    ($scan_type:ident, $single_ident:ident, $multi_ident:ident) => {
+macro_rules! io_shortcut {(
+    $(($type:ident, $types:ident))*
+) => (
+    $(
         impl<R: BufRead, W: Write> IO<R, W> {
             #[inline]
             #[allow(unused)]
-            fn $single_ident(&mut self) -> $scan_type {
+            fn $type(&mut self) -> $type {
                 self.next()
             }
             #[inline]
             #[allow(unused)]
-            fn $multi_ident(&mut self, n: usize) -> Vec<$scan_type> {
+            fn $types(&mut self, n: usize) -> Vec<$type> {
                 (0..n).map(|_| self.next()).collect()
             }
         }
-    };
+    )*
+)}
+
+io_shortcut! {
+    (u8, u8s) (u16, u16s) (u32, u32s) (u64, u64s) (u128, u128s)
+    (i8, i8s) (i16, i16s) (i32, i32s) (i64, i64s) (i128, i128s)
+    (usize, usizes)
 }
-io_shortcut!(usize, usize, usizes);

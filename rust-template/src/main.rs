@@ -1,12 +1,4 @@
 #![allow(unused)]
-macro_rules! some_or {
-    ($e:expr, $err:expr) => {{
-        match $e {
-            Some(r) => r,
-            None => $err,
-        }
-    }};
-}
 
 fn main() {
     let mut input = In::stdin();
